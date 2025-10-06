@@ -1,0 +1,242 @@
+{
+  "info": {
+    "name": "Resources API",
+    "description": "Collection for testing the Resources API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Eletrônicos\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/categories",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/categories",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/categories/{{categoryId}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["categories", "{{categoryId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Features",
+      "item": [
+        {
+          "name": "Create Feature",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tamanho da Tela\",\n  \"type\": \"STRING\",\n  \"categoryId\": \"{{categoryId}}\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/features",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["features"]
+            }
+          }
+        },
+        {
+          "name": "Get All Features",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/features",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["features"]
+            }
+          }
+        },
+        {
+          "name": "Get Features by Category",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/features/category/{{categoryId}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["features", "category", "{{categoryId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "item": [
+        {
+          "name": "Create Resource",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone 14\",\n  \"quantity\": 10,\n  \"status\": true,\n  \"categoryId\": \"{{categoryId}}\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/resources",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["resources"]
+            }
+          }
+        },
+        {
+          "name": "Get All Resources",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/resources",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["resources"]
+            }
+          }
+        },
+        {
+          "name": "Get Resources by Category",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/resources/category/{{categoryId}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["resources", "category", "{{categoryId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feature Values",
+      "item": [
+        {
+          "name": "Create Feature Value",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valueString\": \"6.1 polegadas\",\n  \"resourceId\": \"{{resourceId}}\",\n  \"featureId\": \"{{featureId}}\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/feature-values",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["feature-values"]
+            }
+          }
+        },
+        {
+          "name": "Get All Feature Values",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/feature-values",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["feature-values"]
+            }
+          }
+        },
+        {
+          "name": "Get Feature Values by Resource",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/feature-values/resource/{{resourceId}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["feature-values", "resource", "{{resourceId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "categoryId",
+      "value": "",
+      "description": "ID of a category"
+    },
+    {
+      "key": "featureId",
+      "value": "",
+      "description": "ID of a feature"
+    },
+    {
+      "key": "resourceId",
+      "value": "",
+      "description": "ID of a resource"
+    }
+  ]
+}
