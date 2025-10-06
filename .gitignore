@@ -15,10 +15,6 @@ build/
 .env.test.local
 .env.production.local
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
 
 # Logs
 logs/
@@ -79,3 +75,4 @@ Thumbs.db
 
 # TernJS port file
 .tern-port
+\n+!resources.db
