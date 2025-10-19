@@ -4,7 +4,9 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
+  Query,
   Delete,
   ValidationPipe,
   ParseUUIDPipe,
@@ -40,7 +42,10 @@ export class FeatureController {
     description: 'Return all features.',
     type: [Feature],
   })
-  async findAll(): Promise<Feature[]> {
+  async findAll(@Query() query?: any): Promise<Feature[]> {
+    if (query && query.categoryId) {
+      return await this.featureService.findByCategory(query.categoryId);
+    }
     return await this.featureService.findAll();
   }
 
@@ -81,6 +86,16 @@ export class FeatureController {
   })
   @ApiResponse({ status: 404, description: 'Feature not found.' })
   async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(ValidationPipe) updateFeatureDto: UpdateFeatureDto,
+  ): Promise<Feature> {
+    return await this.featureService.update(id, updateFeatureDto);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Replace a feature' })
+  @ApiParam({ name: 'id', description: 'Feature ID', type: 'string' })
+  async replace(
     @Param('id', ParseUUIDPipe) id: string,
     @Body(ValidationPipe) updateFeatureDto: UpdateFeatureDto,
   ): Promise<Feature> {

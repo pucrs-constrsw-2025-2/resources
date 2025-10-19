@@ -4,13 +4,17 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
+  Query,
   ValidationPipe,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { CategoryService } from '../services/category.service';
+import { ResourceService } from '../services/resource.service';
+import { FeatureService } from '../services/feature.service';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { Category } from '../entities/category.entity';
@@ -18,7 +22,11 @@ import { Category } from '../entities/category.entity';
 @ApiTags('categories')
 @Controller('categories')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryService: CategoryService,
+    private readonly resourceService: ResourceService,
+    private readonly featureService: FeatureService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new category' })
@@ -40,7 +48,8 @@ export class CategoryController {
     description: 'Return all categories.',
     type: [Category],
   })
-  async findAll(): Promise<Category[]> {
+  async findAll(@Query() query?: any): Promise<Category[]> {
+    // query can be used for filtering/searching in future
     return await this.categoryService.findAll();
   }
 
@@ -73,6 +82,16 @@ export class CategoryController {
     return await this.categoryService.update(id, updateCategoryDto);
   }
 
+  @Put(':id')
+  @ApiOperation({ summary: 'Replace a category' })
+  @ApiParam({ name: 'id', description: 'Category ID', type: 'string' })
+  async replace(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(ValidationPipe) updateCategoryDto: UpdateCategoryDto,
+  ): Promise<Category> {
+    return await this.categoryService.update(id, updateCategoryDto);
+  }
+
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a category' })
   @ApiParam({ name: 'id', description: 'Category ID', type: 'string' })
@@ -83,5 +102,40 @@ export class CategoryController {
   @ApiResponse({ status: 404, description: 'Category not found.' })
   async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return await this.categoryService.remove(id);
+  }
+
+  // Relationship: Resources of a Category
+  @Get(':id/resources')
+  @ApiOperation({ summary: 'Get resources for a category' })
+  async getResources(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.resourceService.findByCategory(id);
+  }
+
+  @Post(':id/resources')
+  @ApiOperation({ summary: 'Create a resource in a category' })
+  async createResource(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(ValidationPipe) createResourceDto: any,
+  ) {
+    // ensure categoryId is set to the path id
+    createResourceDto.categoryId = id;
+    return await this.resourceService.create(createResourceDto);
+  }
+
+  // Relationship: Features of a Category
+  @Get(':id/features')
+  @ApiOperation({ summary: 'Get features for a category' })
+  async getFeatures(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.featureService.findByCategory(id);
+  }
+
+  @Post(':id/features')
+  @ApiOperation({ summary: 'Create a feature in a category' })
+  async createFeature(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(ValidationPipe) createFeatureDto: any,
+  ) {
+    createFeatureDto.categoryId = id;
+    return await this.featureService.create(createFeatureDto);
   }
 }

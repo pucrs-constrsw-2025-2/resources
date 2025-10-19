@@ -71,6 +71,66 @@ export class FeatureValueController {
     return await this.featureValueService.findByResource(resourceId);
   }
 
+  // Resource-scoped endpoints
+  @Post('/resources/:resourceId/features')
+  @ApiOperation({ summary: 'Create a feature value for a resource' })
+  async createForResource(
+    @Param('resourceId', ParseUUIDPipe) resourceId: string,
+    @Body(ValidationPipe) createFeatureValueDto: CreateFeatureValueDto,
+  ): Promise<FeatureValue> {
+    createFeatureValueDto.resourceId = resourceId;
+    return await this.featureValueService.create(createFeatureValueDto);
+  }
+
+  @Get('/resources/:resourceId/features')
+  @ApiOperation({ summary: 'Get feature values for a resource' })
+  async findAllForResource(
+    @Param('resourceId', ParseUUIDPipe) resourceId: string,
+  ): Promise<FeatureValue[]> {
+    return await this.featureValueService.findByResource(resourceId);
+  }
+
+  @Get('/resources/:resourceId/features/:featureValueId')
+  @ApiOperation({ summary: 'Get a feature value by id for a resource' })
+  async findOneForResource(
+    @Param('resourceId', ParseUUIDPipe) resourceId: string,
+    @Param('featureValueId', ParseUUIDPipe) featureValueId: string,
+  ): Promise<FeatureValue> {
+    // reuse findOne (ensures existence) and optionally verify resourceId
+    const fv = await this.featureValueService.findOne(featureValueId);
+    if (fv.resourceId !== resourceId) {
+      throw new Error('FeatureValue does not belong to the specified resource');
+    }
+    return fv;
+  }
+
+  @Patch('/resources/:resourceId/features/:featureValueId')
+  @ApiOperation({ summary: 'Update a feature value for a resource' })
+  async updateForResource(
+    @Param('resourceId', ParseUUIDPipe) resourceId: string,
+    @Param('featureValueId', ParseUUIDPipe) featureValueId: string,
+    @Body(ValidationPipe) updateFeatureValueDto: UpdateFeatureValueDto,
+  ): Promise<FeatureValue> {
+    const fv = await this.featureValueService.findOne(featureValueId);
+    if (fv.resourceId !== resourceId) {
+      throw new Error('FeatureValue does not belong to the specified resource');
+    }
+    return await this.featureValueService.update(featureValueId, updateFeatureValueDto);
+  }
+
+  @Delete('/resources/:resourceId/features/:featureValueId')
+  @ApiOperation({ summary: 'Delete a feature value for a resource' })
+  async removeForResource(
+    @Param('resourceId', ParseUUIDPipe) resourceId: string,
+    @Param('featureValueId', ParseUUIDPipe) featureValueId: string,
+  ): Promise<void> {
+    const fv = await this.featureValueService.findOne(featureValueId);
+    if (fv.resourceId !== resourceId) {
+      throw new Error('FeatureValue does not belong to the specified resource');
+    }
+    return await this.featureValueService.remove(featureValueId);
+  }
+
   @Get('feature/:featureId')
   @ApiOperation({ summary: 'Get feature values by feature id' })
   @ApiParam({ name: 'featureId', description: 'Feature ID', type: 'string' })

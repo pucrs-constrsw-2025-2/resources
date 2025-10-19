@@ -4,6 +4,7 @@ import { CategoryController } from './controllers/category.controller';
 import { FeatureController } from './controllers/feature.controller';
 import { ResourceController } from './controllers/resource.controller';
 import { FeatureValueController } from './controllers/feature-value.controller';
+import { ValueTypesController } from './controllers/value-types.controller';
 import { CategoryService } from './services/category.service';
 import { FeatureService } from './services/feature.service';
 import { ResourceService } from './services/resource.service';
@@ -29,6 +30,7 @@ import { FeatureValue } from './entities/feature-value.entity';
     FeatureController,
     ResourceController,
     FeatureValueController,
+    ValueTypesController,
   ],
   providers: [
     CategoryService,

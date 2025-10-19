@@ -4,7 +4,9 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
+  Query,
   Delete,
   ValidationPipe,
   ParseUUIDPipe,
@@ -40,7 +42,11 @@ export class ResourceController {
     description: 'Return all resources.',
     type: [Resource],
   })
-  async findAll(): Promise<Resource[]> {
+  async findAll(@Query() query?: any): Promise<Resource[]> {
+    // if query contains categoryId, delegate to findByCategory
+    if (query && query.categoryId) {
+      return await this.resourceService.findByCategory(query.categoryId);
+    }
     return await this.resourceService.findAll();
   }
 
@@ -81,6 +87,16 @@ export class ResourceController {
   })
   @ApiResponse({ status: 404, description: 'Resource not found.' })
   async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(ValidationPipe) updateResourceDto: UpdateResourceDto,
+  ): Promise<Resource> {
+    return await this.resourceService.update(id, updateResourceDto);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Replace a resource' })
+  @ApiParam({ name: 'id', description: 'Resource ID', type: 'string' })
+  async replace(
     @Param('id', ParseUUIDPipe) id: string,
     @Body(ValidationPipe) updateResourceDto: UpdateResourceDto,
   ): Promise<Resource> {
