@@ -1,7 +1,8 @@
 {
   "info": {
-    "name": "Resources API",
-    "description": "Collection for testing the Resources API",
+    "name": "Resources API - Full",
+    "_postman_id": "resources-api-full",
+    "description": "Collection to test all endpoints of the Resources API (includes nested routes).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -13,102 +14,66 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Eletrônicos\"\n}"
-            },
-            "url": {
-              "raw": "http://localhost:3000/categories",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["categories"]
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Eletrônicos\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/categories", "host": ["{{baseUrl}}"], "path": ["api","v1","categories"] }
           }
         },
         {
           "name": "Get All Categories",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/categories",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["categories"]
-            }
-          }
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/categories", "host": ["{{baseUrl}}"], "path": ["api","v1","categories"] } }
         },
         {
           "name": "Get Category by ID",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/categories/{{categoryId}}",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["categories", "{{categoryId}}"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Features",
-      "item": [
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}"] } }
+        },
         {
-          "name": "Create Feature",
+          "name": "Update Category (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Eletrônicos Atualizada\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}"] }
+          }
+        },
+        {
+          "name": "Patch Category",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Parte do Nome\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}"] }
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}"] } }
+        },
+        {
+          "name": "Get Resources of Category",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}/resources", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}","resources"] } }
+        },
+        {
+          "name": "Create Resource in Category",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Tamanho da Tela\",\n  \"type\": \"STRING\",\n  \"categoryId\": \"{{categoryId}}\"\n}"
-            },
-            "url": {
-              "raw": "http://localhost:3000/features",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["features"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"iPhone 14\",\n  \"quantity\": 10,\n  \"status\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}/resources", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}","resources"] }
           }
         },
         {
-          "name": "Get All Features",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/features",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["features"]
-            }
-          }
+          "name": "Get Features of Category",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}/features", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}","features"] } }
         },
         {
-          "name": "Get Features by Category",
+          "name": "Create Feature in Category",
           "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/features/category/{{categoryId}}",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["features", "category", "{{categoryId}}"]
-            }
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tamanho da Tela\",\n  \"type\": \"STRING\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}/features", "host": ["{{baseUrl}}"], "path": ["api","v1","categories","{{categoryId}}","features"] }
           }
         }
       ]
@@ -120,50 +85,92 @@
           "name": "Create Resource",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"iPhone 14\",\n  \"quantity\": 10,\n  \"status\": true,\n  \"categoryId\": \"{{categoryId}}\"\n}"
-            },
-            "url": {
-              "raw": "http://localhost:3000/resources",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["resources"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"iPhone 14\",\n  \"quantity\": 10,\n  \"status\": true,\n  \"categoryId\": \"{{categoryId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/resources", "host": ["{{baseUrl}}"], "path": ["api","v1","resources"] }
           }
         },
         {
           "name": "Get All Resources",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resources", "host": ["{{baseUrl}}"], "path": ["api","v1","resources"] } }
+        },
+        {
+          "name": "Get Resource by ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}"] } }
+        },
+        {
+          "name": "Get Resources by Category (query)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resources?categoryId={{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources"], "query": [{ "key": "categoryId", "value": "{{categoryId}}" }] } }
+        },
+        {
+          "name": "Update Resource (PUT)",
           "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/resources",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["resources"]
-            }
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"iPhone 14 Pro\",\n  \"quantity\": 5,\n  \"status\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}"] }
           }
         },
         {
-          "name": "Get Resources by Category",
+          "name": "Patch Resource",
           "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/resources/category/{{categoryId}}",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["resources", "category", "{{categoryId}}"]
-            }
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 20\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}"] }
           }
+        },
+        {
+          "name": "Delete Resource",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}"] } }
+        }
+      ]
+    },
+    {
+      "name": "Features",
+      "item": [
+        {
+          "name": "Create Feature",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tamanho da Tela\",\n  \"type\": \"STRING\",\n  \"categoryId\": \"{{categoryId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/features", "host": ["{{baseUrl}}"], "path": ["api","v1","features"] }
+          }
+        },
+        {
+          "name": "Get All Features",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/features", "host": ["{{baseUrl}}"], "path": ["api","v1","features"] } }
+        },
+        {
+          "name": "Get Feature by ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/features/{{featureId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","features","{{featureId}}"] } }
+        },
+        {
+          "name": "Get Features by Category (query)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/features?categoryId={{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","features"], "query": [{ "key": "categoryId", "value": "{{categoryId}}" }] } }
+        },
+        {
+          "name": "Update Feature (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tela (atualizada)\",\n  \"type\": \"STRING\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/features/{{featureId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","features","{{featureId}}"] }
+          }
+        },
+        {
+          "name": "Patch Feature",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Nome parcial\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/features/{{featureId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","features","{{featureId}}"] }
+          }
+        },
+        {
+          "name": "Delete Feature",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/features/{{featureId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","features","{{featureId}}"] } }
         }
       ]
     },
@@ -171,72 +178,71 @@
       "name": "Feature Values",
       "item": [
         {
-          "name": "Create Feature Value",
+          "name": "Create Feature Value (root)",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"valueString\": \"6.1 polegadas\",\n  \"resourceId\": \"{{resourceId}}\",\n  \"featureId\": \"{{featureId}}\"\n}"
-            },
-            "url": {
-              "raw": "http://localhost:3000/feature-values",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["feature-values"]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"valueString\": \"6.1 polegadas\",\n  \"resourceId\": \"{{resourceId}}\",\n  \"featureId\": \"{{featureId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/feature-values", "host": ["{{baseUrl}}"], "path": ["api","v1","feature-values"] }
           }
         },
         {
           "name": "Get All Feature Values",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/feature-values", "host": ["{{baseUrl}}"], "path": ["api","v1","feature-values"] } }
+        },
+        {
+          "name": "Get Feature Value by ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/feature-values/{{featureValueId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","feature-values","{{featureValueId}}"] } }
+        },
+        {
+          "name": "Get Feature Values by Resource (root)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/feature-values/resource/{{resourceId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","feature-values","resource","{{resourceId}}"] } }
+        },
+        {
+          "name": "Create Feature Value for Resource (nested)",
           "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/feature-values",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["feature-values"]
-            }
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"featureId\": \"{{featureId}}\",\n  \"valueString\": \"6.1 polegadas\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}/features", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}","features"] }
           }
         },
         {
-          "name": "Get Feature Values by Resource",
+          "name": "Get Feature Values for Resource (nested)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}/features", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}","features"] } }
+        },
+        {
+          "name": "Get Feature Value by ID for Resource (nested)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}/features/{{featureValueId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}","features","{{featureValueId}}"] } }
+        },
+        {
+          "name": "Update Feature Value (PATCH nested)",
           "request": {
-            "method": "GET",
-            "url": {
-              "raw": "http://localhost:3000/feature-values/resource/{{resourceId}}",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "3000",
-              "path": ["feature-values", "resource", "{{resourceId}}"]
-            }
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"valueString\": \"6.1 inches (updated)\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}/features/{{featureValueId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}","features","{{featureValueId}}"] }
           }
+        },
+        {
+          "name": "Delete Feature Value (nested)",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/resources/{{resourceId}}/features/{{featureValueId}}", "host": ["{{baseUrl}}"], "path": ["api","v1","resources","{{resourceId}}","features","{{featureValueId}}"] } }
         }
+      ]
+    },
+    {
+      "name": "Value Types",
+      "item": [
+        { "name": "Get Value Types", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/value-types", "host": ["{{baseUrl}}"], "path": ["api","v1","value-types"] } } }
       ]
     }
   ],
+  "event": [],
   "variable": [
-    {
-      "key": "categoryId",
-      "value": "",
-      "description": "ID of a category"
-    },
-    {
-      "key": "featureId",
-      "value": "",
-      "description": "ID of a feature"
-    },
-    {
-      "key": "resourceId",
-      "value": "",
-      "description": "ID of a resource"
-    }
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "categoryId", "value": "", "type": "string" },
+    { "key": "resourceId", "value": "", "type": "string" },
+    { "key": "featureId", "value": "", "type": "string" },
+    { "key": "featureValueId", "value": "", "type": "string" }
   ]
 }
