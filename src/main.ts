@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
@@ -35,10 +36,13 @@ async function bootstrap() {
   // Global API prefix
   app.setGlobalPrefix('api/v1');
 
-  const port = process.env.PORT || 3000;
+  // Prefer service-scoped env var from root .env, fallback to PORT, then default
+  const port = Number(process.env.RESOURCES_INTERNAL_API_PORT || process.env.PORT || 3000);
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
-  console.log(`Swagger documentation is available at: http://localhost:${port}/api`);
+  const host = process.env.RESOURCES_INTERNAL_HOST || 'localhost';
+  const protocol = process.env.RESOURCES_INTERNAL_PROTOCOL || 'http';
+  console.log(`Application is running on: ${protocol}://${host}:${port}`);
+  console.log(`Swagger documentation is available at: ${protocol}://${host}:${port}/api`);
 }
 
 bootstrap();

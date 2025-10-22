@@ -1,30 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 import { ValueType } from '../enums/value-type.enum';
-import { Category } from './category.entity';
-import { FeatureValue } from './feature-value.entity';
 
-@Entity('features')
+export type FeatureDocument = Feature & Document;
+
+@Schema({ collection: 'features', timestamps: true })
 export class Feature {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ type: 'varchar', length: 255 })
+  @Prop({ required: true })
   name: string;
 
-  @Column({
-    type: 'varchar',
-    enum: ValueType,
-    default: ValueType.STRING,
-  })
+  @Prop({ required: true, enum: ValueType, default: ValueType.STRING })
   type: ValueType;
 
-  @Column({ name: 'category_id' })
-  categoryId: string;
-
-  @ManyToOne(() => Category, (category) => category.features)
-  @JoinColumn({ name: 'category_id' })
-  category: Category;
-
-  @OneToMany(() => FeatureValue, (featureValue) => featureValue.feature)
-  featureValues: FeatureValue[];
+  @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
+  categoryId: Types.ObjectId;
 }
+
+export const FeatureSchema = SchemaFactory.createForClass(Feature);

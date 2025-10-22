@@ -98,7 +98,7 @@ export class FeatureValueController {
   ): Promise<FeatureValue> {
     // reuse findOne (ensures existence) and optionally verify resourceId
     const fv = await this.featureValueService.findOne(featureValueId);
-    if (fv.resourceId !== resourceId) {
+    if (fv.resourceId.toString() !== resourceId) {
       throw new Error('FeatureValue does not belong to the specified resource');
     }
     return fv;
@@ -112,7 +112,7 @@ export class FeatureValueController {
     @Body(ValidationPipe) updateFeatureValueDto: UpdateFeatureValueDto,
   ): Promise<FeatureValue> {
     const fv = await this.featureValueService.findOne(featureValueId);
-    if (fv.resourceId !== resourceId) {
+    if (fv.resourceId.toString() !== resourceId) {
       throw new Error('FeatureValue does not belong to the specified resource');
     }
     return await this.featureValueService.update(featureValueId, updateFeatureValueDto);
@@ -125,7 +125,7 @@ export class FeatureValueController {
     @Param('featureValueId', ParseUUIDPipe) featureValueId: string,
   ): Promise<void> {
     const fv = await this.featureValueService.findOne(featureValueId);
-    if (fv.resourceId !== resourceId) {
+    if (fv.resourceId.toString() !== resourceId) {
       throw new Error('FeatureValue does not belong to the specified resource');
     }
     return await this.featureValueService.remove(featureValueId);

@@ -1,33 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Resource } from '../entities/resource.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Resource, ResourceDocument } from '../entities/resource.entity';
 import { CreateResourceDto } from '../dto/create-resource.dto';
 import { UpdateResourceDto } from '../dto/update-resource.dto';
 
 @Injectable()
 export class ResourceService {
   constructor(
-    @InjectRepository(Resource)
-    private readonly resourceRepository: Repository<Resource>,
+    @InjectModel(Resource.name)
+    private readonly resourceModel: Model<ResourceDocument>,
   ) {}
 
   async create(createResourceDto: CreateResourceDto): Promise<Resource> {
-    const resource = this.resourceRepository.create(createResourceDto);
-    return await this.resourceRepository.save(resource);
+    const resource = new this.resourceModel(createResourceDto);
+    return await resource.save();
   }
 
   async findAll(): Promise<Resource[]> {
-    return await this.resourceRepository.find({
-      relations: ['category', 'features', 'features.feature'],
-    });
+    return await this.resourceModel.find().populate('categoryId').exec();
   }
 
   async findOne(id: string): Promise<Resource> {
-    const resource = await this.resourceRepository.findOne({
-      where: { id },
-      relations: ['category', 'features', 'features.feature'],
-    });
+    const resource = await this.resourceModel.findById(id).populate('categoryId').exec();
 
     if (!resource) {
       throw new NotFoundException(`Resource with ID ${id} not found`);
@@ -37,20 +32,30 @@ export class ResourceService {
   }
 
   async findByCategory(categoryId: string): Promise<Resource[]> {
-    return await this.resourceRepository.find({
-      where: { categoryId },
-      relations: ['category', 'features', 'features.feature'],
-    });
+    return await this.resourceModel
+      .find({ categoryId: new Types.ObjectId(categoryId) })
+      .populate('categoryId')
+      .exec();
   }
 
   async update(id: string, updateResourceDto: UpdateResourceDto): Promise<Resource> {
-    const resource = await this.findOne(id);
-    Object.assign(resource, updateResourceDto);
-    return await this.resourceRepository.save(resource);
+    const resource = await this.resourceModel
+      .findByIdAndUpdate(id, updateResourceDto, { new: true })
+      .populate('categoryId')
+      .exec();
+
+    if (!resource) {
+      throw new NotFoundException(`Resource with ID ${id} not found`);
+    }
+
+    return resource;
   }
 
   async remove(id: string): Promise<void> {
-    const resource = await this.findOne(id);
-    await this.resourceRepository.remove(resource);
+    const result = await this.resourceModel.findByIdAndDelete(id).exec();
+    
+    if (!result) {
+      throw new NotFoundException(`Resource with ID ${id} not found`);
+    }
   }
 }

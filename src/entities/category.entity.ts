@@ -1,18 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Resource } from './resource.entity';
-import { Feature } from './feature.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Entity('categories')
+export type CategoryDocument = Category & Document;
+
+@Schema({ collection: 'categories', timestamps: true })
 export class Category {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ type: 'varchar', length: 255 })
+  @Prop({ required: true })
   name: string;
-
-  @OneToMany(() => Resource, (resource) => resource.category)
-  resources: Resource[];
-
-  @OneToMany(() => Feature, (feature) => feature.category)
-  features: Feature[];
 }
+
+export const CategorySchema = SchemaFactory.createForClass(Category);

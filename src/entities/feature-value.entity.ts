@@ -1,32 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Resource } from './resource.entity';
-import { Feature } from './feature.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-@Entity('feature_values')
+export type FeatureValueDocument = FeatureValue & Document;
+
+@Schema({ collection: 'feature_values', timestamps: true })
 export class FeatureValue {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ name: 'value_string', type: 'varchar', length: 500, nullable: true })
+  @Prop({ required: false })
   valueString: string;
 
-  @Column({ name: 'value_number', type: 'real', nullable: true })
+  @Prop({ required: false })
   valueNumber: number;
 
-  @Column({ name: 'value_boolean', type: 'boolean', nullable: true })
+  @Prop({ required: false })
   valueBoolean: boolean;
 
-  @Column({ name: 'resource_id' })
-  resourceId: string;
+  @Prop({ type: Types.ObjectId, ref: 'Resource', required: true })
+  resourceId: Types.ObjectId;
 
-  @Column({ name: 'feature_id' })
-  featureId: string;
-
-  @ManyToOne(() => Resource, (resource) => resource.features)
-  @JoinColumn({ name: 'resource_id' })
-  resource: Resource;
-
-  @ManyToOne(() => Feature, (feature) => feature.featureValues)
-  @JoinColumn({ name: 'feature_id' })
-  feature: Feature;
+  @Prop({ type: Types.ObjectId, ref: 'Feature', required: true })
+  featureId: Types.ObjectId;
 }
+
+export const FeatureValueSchema = SchemaFactory.createForClass(FeatureValue);

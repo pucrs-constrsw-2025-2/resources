@@ -32,32 +32,32 @@ async function seed() {
     const screenSizeFeature = await featureService.create({
       name: 'Tamanho da Tela',
       type: ValueType.STRING,
-      categoryId: electronicsCategory.id,
+      categoryId: (electronicsCategory as any)._id,
     });
 
     const priceFeature = await featureService.create({
       name: 'Preço',
       type: ValueType.NUMBER,
-      categoryId: electronicsCategory.id,
+      categoryId: (electronicsCategory as any)._id,
     });
 
     const wirelessFeature = await featureService.create({
       name: 'Sem Fio',
       type: ValueType.BOOLEAN,
-      categoryId: electronicsCategory.id,
+      categoryId: (electronicsCategory as any)._id,
     });
 
     // Create features for furniture
     const materialFeature = await featureService.create({
       name: 'Material',
       type: ValueType.STRING,
-      categoryId: furnitureCategory.id,
+      categoryId: (furnitureCategory as any)._id,
     });
 
     const weightFeature = await featureService.create({
       name: 'Peso (kg)',
       type: ValueType.NUMBER,
-      categoryId: furnitureCategory.id,
+      categoryId: (furnitureCategory as any)._id,
     });
 
     console.log('✅ Features created');
@@ -67,35 +67,35 @@ async function seed() {
       name: 'iPhone 14',
       quantity: 15,
       status: true,
-      categoryId: electronicsCategory.id,
+      categoryId: (electronicsCategory as any)._id,
     });
 
     const samsung = await resourceService.create({
       name: 'Samsung Galaxy S23',
       quantity: 8,
       status: true,
-      categoryId: electronicsCategory.id,
+      categoryId: (electronicsCategory as any)._id,
     });
 
     const airpods = await resourceService.create({
       name: 'AirPods Pro',
       quantity: 25,
       status: true,
-      categoryId: electronicsCategory.id,
+      categoryId: (electronicsCategory as any)._id,
     });
 
     const chair = await resourceService.create({
       name: 'Cadeira de Escritório',
       quantity: 12,
       status: true,
-      categoryId: furnitureCategory.id,
+      categoryId: (furnitureCategory as any)._id,
     });
 
     const desk = await resourceService.create({
       name: 'Mesa de Computador',
       quantity: 5,
       status: false,
-      categoryId: furnitureCategory.id,
+      categoryId: (furnitureCategory as any)._id,
     });
 
     console.log('✅ Resources created');
@@ -103,84 +103,84 @@ async function seed() {
     // Create feature values for iPhone
     await featureValueService.create({
       valueString: '6.1 polegadas',
-      resourceId: iphone.id,
-      featureId: screenSizeFeature.id,
+      resourceId: (iphone as any)._id,
+      featureId: (screenSizeFeature as any)._id,
     });
 
     await featureValueService.create({
       valueNumber: 4999.99,
-      resourceId: iphone.id,
-      featureId: priceFeature.id,
+      resourceId: (iphone as any)._id,
+      featureId: (priceFeature as any)._id,
     });
 
     await featureValueService.create({
       valueBoolean: true,
-      resourceId: iphone.id,
-      featureId: wirelessFeature.id,
+      resourceId: (iphone as any)._id,
+      featureId: (wirelessFeature as any)._id,
     });
 
     // Create feature values for Samsung
     await featureValueService.create({
       valueString: '6.1 polegadas',
-      resourceId: samsung.id,
-      featureId: screenSizeFeature.id,
+      resourceId: (samsung as any)._id,
+      featureId: (screenSizeFeature as any)._id,
     });
 
     await featureValueService.create({
       valueNumber: 3999.99,
-      resourceId: samsung.id,
-      featureId: priceFeature.id,
+      resourceId: (samsung as any)._id,
+      featureId: (priceFeature as any)._id,
     });
 
     await featureValueService.create({
       valueBoolean: true,
-      resourceId: samsung.id,
-      featureId: wirelessFeature.id,
+      resourceId: (samsung as any)._id,
+      featureId: (wirelessFeature as any)._id,
     });
 
     // Create feature values for AirPods
     await featureValueService.create({
       valueString: 'N/A',
-      resourceId: airpods.id,
-      featureId: screenSizeFeature.id,
+      resourceId: (airpods as any)._id,
+      featureId: (screenSizeFeature as any)._id,
     });
 
     await featureValueService.create({
       valueNumber: 1299.99,
-      resourceId: airpods.id,
-      featureId: priceFeature.id,
+      resourceId: (airpods as any)._id,
+      featureId: (priceFeature as any)._id,
     });
 
     await featureValueService.create({
       valueBoolean: true,
-      resourceId: airpods.id,
-      featureId: wirelessFeature.id,
+      resourceId: (airpods as any)._id,
+      featureId: (wirelessFeature as any)._id,
     });
 
     // Create feature values for Chair
     await featureValueService.create({
       valueString: 'Couro sintético',
-      resourceId: chair.id,
-      featureId: materialFeature.id,
+      resourceId: (chair as any)._id,
+      featureId: (materialFeature as any)._id,
     });
 
     await featureValueService.create({
       valueNumber: 15.5,
-      resourceId: chair.id,
-      featureId: weightFeature.id,
+      resourceId: (chair as any)._id,
+      featureId: (weightFeature as any)._id,
     });
 
     // Create feature values for Desk
     await featureValueService.create({
       valueString: 'Madeira MDF',
-      resourceId: desk.id,
-      featureId: materialFeature.id,
+      resourceId: (desk as any)._id,
+      featureId: (materialFeature as any)._id,
     });
 
     await featureValueService.create({
       valueNumber: 32.0,
-      resourceId: desk.id,
-      featureId: weightFeature.id,
+      resourceId: (desk as any)._id,
+      featureId: (weightFeature as any)._id,
     });
 
     console.log('✅ Feature values created');

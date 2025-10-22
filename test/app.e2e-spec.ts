@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Category } from '../src/entities/category.entity';
-import { Feature } from '../src/entities/feature.entity';
-import { Resource } from '../src/entities/resource.entity';
-import { FeatureValue } from '../src/entities/feature-value.entity';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Category, CategorySchema } from '../src/entities/category.entity';
+import { Feature, FeatureSchema } from '../src/entities/feature.entity';
+import { Resource, ResourceSchema } from '../src/entities/resource.entity';
+import { FeatureValue, FeatureValueSchema } from '../src/entities/feature-value.entity';
 import { CategoryController } from '../src/controllers/category.controller';
 import { FeatureController } from '../src/controllers/feature.controller';
 import { ResourceController } from '../src/controllers/resource.controller';
@@ -25,14 +25,13 @@ describe('Resources API (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [Category, Feature, Resource, FeatureValue],
-          synchronize: true,
-          logging: false,
-        }),
-        TypeOrmModule.forFeature([Category, Feature, Resource, FeatureValue]),
+        MongooseModule.forRoot('mongodb://localhost:27017/resources-test'),
+        MongooseModule.forFeature([
+          { name: Category.name, schema: CategorySchema },
+          { name: Feature.name, schema: FeatureSchema },
+          { name: Resource.name, schema: ResourceSchema },
+          { name: FeatureValue.name, schema: FeatureValueSchema },
+        ]),
       ],
       controllers: [
         CategoryController,
