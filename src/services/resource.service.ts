@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { Resource, ResourceDocument } from "../entities/resource.entity";
@@ -22,6 +26,10 @@ export class ResourceService {
   }
 
   async findOne(id: string): Promise<Resource> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const resource = await this.resourceModel.findById(id).exec();
 
     if (!resource) {
@@ -43,6 +51,10 @@ export class ResourceService {
     id: string,
     updateResourceDto: UpdateResourceDto,
   ): Promise<Resource> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const resource = await this.resourceModel
       .findByIdAndUpdate(id, updateResourceDto, { new: true })
       .exec();
@@ -55,6 +67,10 @@ export class ResourceService {
   }
 
   async remove(id: string): Promise<void> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const result = await this.resourceModel.findByIdAndDelete(id).exec();
 
     if (!result) {

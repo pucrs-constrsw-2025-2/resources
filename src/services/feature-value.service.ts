@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import {
@@ -27,6 +31,10 @@ export class FeatureValueService {
   }
 
   async findOne(id: string): Promise<FeatureValue> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const featureValue = await this.featureValueModel.findById(id).exec();
 
     if (!featureValue) {
@@ -56,6 +64,10 @@ export class FeatureValueService {
     id: string,
     updateFeatureValueDto: UpdateFeatureValueDto,
   ): Promise<FeatureValue> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const featureValue = await this.featureValueModel
       .findByIdAndUpdate(id, updateFeatureValueDto, { new: true })
       .exec();
@@ -68,6 +80,10 @@ export class FeatureValueService {
   }
 
   async remove(id: string): Promise<void> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const result = await this.featureValueModel.findByIdAndDelete(id).exec();
 
     if (!result) {
