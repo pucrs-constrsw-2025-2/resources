@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { Resource, ResourceDocument } from '../entities/resource.entity';
 import { CreateResourceDto } from '../dto/create-resource.dto';
 import { UpdateResourceDto } from '../dto/update-resource.dto';
@@ -18,11 +18,11 @@ export class ResourceService {
   }
 
   async findAll(): Promise<Resource[]> {
-    return await this.resourceModel.find().populate('categoryId').exec();
+    return await this.resourceModel.find().exec();
   }
 
   async findOne(id: string): Promise<Resource> {
-    const resource = await this.resourceModel.findById(id).populate('categoryId').exec();
+    const resource = await this.resourceModel.findById(id).exec();
 
     if (!resource) {
       throw new NotFoundException(`Resource with ID ${id} not found`);
@@ -32,16 +32,12 @@ export class ResourceService {
   }
 
   async findByCategory(categoryId: string): Promise<Resource[]> {
-    return await this.resourceModel
-      .find({ categoryId: new Types.ObjectId(categoryId) })
-      .populate('categoryId')
-      .exec();
+    return await this.resourceModel.find({ categoryId }).exec();
   }
 
   async update(id: string, updateResourceDto: UpdateResourceDto): Promise<Resource> {
     const resource = await this.resourceModel
       .findByIdAndUpdate(id, updateResourceDto, { new: true })
-      .populate('categoryId')
       .exec();
 
     if (!resource) {

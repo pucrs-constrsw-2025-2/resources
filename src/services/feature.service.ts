@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { Feature, FeatureDocument } from '../entities/feature.entity';
 import { CreateFeatureDto } from '../dto/create-feature.dto';
 import { UpdateFeatureDto } from '../dto/update-feature.dto';
@@ -18,11 +18,11 @@ export class FeatureService {
   }
 
   async findAll(): Promise<Feature[]> {
-    return await this.featureModel.find().populate('categoryId').exec();
+    return await this.featureModel.find().exec();
   }
 
   async findOne(id: string): Promise<Feature> {
-    const feature = await this.featureModel.findById(id).populate('categoryId').exec();
+    const feature = await this.featureModel.findById(id).exec();
 
     if (!feature) {
       throw new NotFoundException(`Feature with ID ${id} not found`);
@@ -32,16 +32,12 @@ export class FeatureService {
   }
 
   async findByCategory(categoryId: string): Promise<Feature[]> {
-    return await this.featureModel
-      .find({ categoryId: new Types.ObjectId(categoryId) })
-      .populate('categoryId')
-      .exec();
+    return await this.featureModel.find({ categoryId }).exec();
   }
 
   async update(id: string, updateFeatureDto: UpdateFeatureDto): Promise<Feature> {
     const feature = await this.featureModel
       .findByIdAndUpdate(id, updateFeatureDto, { new: true })
-      .populate('categoryId')
       .exec();
 
     if (!feature) {

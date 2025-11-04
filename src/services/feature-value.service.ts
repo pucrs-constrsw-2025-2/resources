@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { FeatureValue, FeatureValueDocument } from '../entities/feature-value.entity';
 import { CreateFeatureValueDto } from '../dto/create-feature-value.dto';
 import { UpdateFeatureValueDto } from '../dto/update-feature-value.dto';
@@ -18,19 +18,11 @@ export class FeatureValueService {
   }
 
   async findAll(): Promise<FeatureValue[]> {
-    return await this.featureValueModel
-      .find()
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    return await this.featureValueModel.find().exec();
   }
 
   async findOne(id: string): Promise<FeatureValue> {
-    const featureValue = await this.featureValueModel
-      .findById(id)
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    const featureValue = await this.featureValueModel.findById(id).exec();
 
     if (!featureValue) {
       throw new NotFoundException(`FeatureValue with ID ${id} not found`);
@@ -40,26 +32,16 @@ export class FeatureValueService {
   }
 
   async findByResource(resourceId: string): Promise<FeatureValue[]> {
-    return await this.featureValueModel
-      .find({ resourceId: new Types.ObjectId(resourceId) })
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    return await this.featureValueModel.find({ resourceId }).exec();
   }
 
   async findByFeature(featureId: string): Promise<FeatureValue[]> {
-    return await this.featureValueModel
-      .find({ featureId: new Types.ObjectId(featureId) })
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    return await this.featureValueModel.find({ featureId }).exec();
   }
 
   async update(id: string, updateFeatureValueDto: UpdateFeatureValueDto): Promise<FeatureValue> {
     const featureValue = await this.featureValueModel
       .findByIdAndUpdate(id, updateFeatureValueDto, { new: true })
-      .populate('resourceId')
-      .populate('featureId')
       .exec();
 
     if (!featureValue) {

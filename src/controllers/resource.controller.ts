@@ -43,7 +43,6 @@ export class ResourceController {
     type: [Resource],
   })
   async findAll(@Query() query?: any): Promise<Resource[]> {
-    // if query contains categoryId, delegate to findByCategory
     if (query && query.categoryId) {
       return await this.resourceService.findByCategory(query.categoryId);
     }

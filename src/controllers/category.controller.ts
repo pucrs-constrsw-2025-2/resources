@@ -49,7 +49,6 @@ export class CategoryController {
     type: [Category],
   })
   async findAll(@Query() query?: any): Promise<Category[]> {
-    // query can be used for filtering/searching in future
     return await this.categoryService.findAll();
   }
 
@@ -104,7 +103,6 @@ export class CategoryController {
     return await this.categoryService.remove(id);
   }
 
-  // Relationship: Resources of a Category
   @Get(':id/resources')
   @ApiOperation({ summary: 'Get resources for a category' })
   async getResources(@Param('id', ParseUUIDPipe) id: string) {
@@ -117,12 +115,10 @@ export class CategoryController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body(ValidationPipe) createResourceDto: any,
   ) {
-    // ensure categoryId is set to the path id
     createResourceDto.categoryId = id;
     return await this.resourceService.create(createResourceDto);
   }
 
-  // Relationship: Features of a Category
   @Get(':id/features')
   @ApiOperation({ summary: 'Get features for a category' })
   async getFeatures(@Param('id', ParseUUIDPipe) id: string) {

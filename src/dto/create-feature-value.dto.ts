@@ -1,21 +1,19 @@
-import { IsString, IsNumber, IsBoolean, IsUUID, IsOptional, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateFeatureValueDto {
   @ApiProperty({
-    description: 'String value for the feature',
+    description: 'String value',
     example: '6.1 inches',
     required: false,
-    maxLength: 500,
   })
   @IsOptional()
   @IsString()
-  @MaxLength(500)
   valueString?: string;
 
   @ApiProperty({
-    description: 'Number value for the feature',
-    example: 6.1,
+    description: 'Number value',
+    example: 128,
     required: false,
   })
   @IsOptional()
@@ -23,7 +21,7 @@ export class CreateFeatureValueDto {
   valueNumber?: number;
 
   @ApiProperty({
-    description: 'Boolean value for the feature',
+    description: 'Boolean value',
     example: true,
     required: false,
   })
@@ -33,15 +31,17 @@ export class CreateFeatureValueDto {
 
   @ApiProperty({
     description: 'Resource ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: '507f1f77bcf86cd799439011',
   })
-  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
   resourceId: string;
 
   @ApiProperty({
     description: 'Feature ID',
-    example: '123e4567-e89b-12d3-a456-426614174001',
+    example: '507f1f77bcf86cd799439011',
   })
-  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
   featureId: string;
 }

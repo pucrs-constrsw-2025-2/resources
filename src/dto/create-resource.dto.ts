@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsUUID, MaxLength, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional, MaxLength, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateResourceDto {
@@ -22,18 +22,17 @@ export class CreateResourceDto {
   quantity: number;
 
   @ApiProperty({
-    description: 'Resource status',
+    description: 'Resource status (active/inactive)',
     example: true,
-    default: true,
   })
   @IsBoolean()
-  status: boolean = true;
+  status: boolean;
 
   @ApiProperty({
     description: 'Category ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: '507f1f77bcf86cd799439011',
   })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   categoryId: string;
 }

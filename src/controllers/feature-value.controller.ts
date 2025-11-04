@@ -71,7 +71,6 @@ export class FeatureValueController {
     return await this.featureValueService.findByResource(resourceId);
   }
 
-  // Resource-scoped endpoints
   @Post('/resources/:resourceId/features')
   @ApiOperation({ summary: 'Create a feature value for a resource' })
   async createForResource(
@@ -96,7 +95,6 @@ export class FeatureValueController {
     @Param('resourceId', ParseUUIDPipe) resourceId: string,
     @Param('featureValueId', ParseUUIDPipe) featureValueId: string,
   ): Promise<FeatureValue> {
-    // reuse findOne (ensures existence) and optionally verify resourceId
     const fv = await this.featureValueService.findOne(featureValueId);
     if (fv.resourceId.toString() !== resourceId) {
       throw new Error('FeatureValue does not belong to the specified resource');

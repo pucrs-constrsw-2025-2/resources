@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEnum, IsUUID, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ValueType } from '../enums/value-type.enum';
 
@@ -14,7 +14,7 @@ export class CreateFeatureDto {
   name: string;
 
   @ApiProperty({
-    description: 'Feature type',
+    description: 'Feature value type',
     enum: ValueType,
     example: ValueType.STRING,
   })
@@ -23,9 +23,9 @@ export class CreateFeatureDto {
 
   @ApiProperty({
     description: 'Category ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: '507f1f77bcf86cd799439011',
   })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   categoryId: string;
 }
