@@ -1,10 +1,10 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../app.module';
-import { CategoryService } from '../services/category.service';
-import { FeatureService } from '../services/feature.service';
-import { ResourceService } from '../services/resource.service';
-import { FeatureValueService } from '../services/feature-value.service';
-import { ValueType } from '../enums/value-type.enum';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "../app.module";
+import { CategoryService } from "../services/category.service";
+import { FeatureService } from "../services/feature.service";
+import { ResourceService } from "../services/resource.service";
+import { FeatureValueService } from "../services/feature-value.service";
+import { ValueType } from "../enums/value-type.enum";
 
 async function seed() {
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -15,94 +15,94 @@ async function seed() {
   const featureValueService = app.get(FeatureValueService);
 
   try {
-    console.log('🌱 Starting database seeding...');
+    console.log("🌱 Starting database seeding...");
 
     // Create categories
     const electronicsCategory = await categoryService.create({
-      name: 'Eletrônicos',
+      name: "Eletrônicos",
     });
 
     const furnitureCategory = await categoryService.create({
-      name: 'Móveis',
+      name: "Móveis",
     });
 
-    console.log('✅ Categories created');
+    console.log("✅ Categories created");
 
     // Create features for electronics
     const screenSizeFeature = await featureService.create({
-      name: 'Tamanho da Tela',
+      name: "Tamanho da Tela",
       type: ValueType.STRING,
       categoryId: (electronicsCategory as any)._id,
     });
 
     const priceFeature = await featureService.create({
-      name: 'Preço',
+      name: "Preço",
       type: ValueType.NUMBER,
       categoryId: (electronicsCategory as any)._id,
     });
 
     const wirelessFeature = await featureService.create({
-      name: 'Sem Fio',
+      name: "Sem Fio",
       type: ValueType.BOOLEAN,
       categoryId: (electronicsCategory as any)._id,
     });
 
     // Create features for furniture
     const materialFeature = await featureService.create({
-      name: 'Material',
+      name: "Material",
       type: ValueType.STRING,
       categoryId: (furnitureCategory as any)._id,
     });
 
     const weightFeature = await featureService.create({
-      name: 'Peso (kg)',
+      name: "Peso (kg)",
       type: ValueType.NUMBER,
       categoryId: (furnitureCategory as any)._id,
     });
 
-    console.log('✅ Features created');
+    console.log("✅ Features created");
 
     // Create resources
     const iphone = await resourceService.create({
-      name: 'iPhone 14',
+      name: "iPhone 14",
       quantity: 15,
       status: true,
       categoryId: (electronicsCategory as any)._id,
     });
 
     const samsung = await resourceService.create({
-      name: 'Samsung Galaxy S23',
+      name: "Samsung Galaxy S23",
       quantity: 8,
       status: true,
       categoryId: (electronicsCategory as any)._id,
     });
 
     const airpods = await resourceService.create({
-      name: 'AirPods Pro',
+      name: "AirPods Pro",
       quantity: 25,
       status: true,
       categoryId: (electronicsCategory as any)._id,
     });
 
     const chair = await resourceService.create({
-      name: 'Cadeira de Escritório',
+      name: "Cadeira de Escritório",
       quantity: 12,
       status: true,
       categoryId: (furnitureCategory as any)._id,
     });
 
     const desk = await resourceService.create({
-      name: 'Mesa de Computador',
+      name: "Mesa de Computador",
       quantity: 5,
       status: false,
       categoryId: (furnitureCategory as any)._id,
     });
 
-    console.log('✅ Resources created');
+    console.log("✅ Resources created");
 
     // Create feature values for iPhone
     await featureValueService.create({
-      valueString: '6.1 polegadas',
+      valueString: "6.1 polegadas",
       resourceId: (iphone as any)._id,
       featureId: (screenSizeFeature as any)._id,
     });
@@ -121,7 +121,7 @@ async function seed() {
 
     // Create feature values for Samsung
     await featureValueService.create({
-      valueString: '6.1 polegadas',
+      valueString: "6.1 polegadas",
       resourceId: (samsung as any)._id,
       featureId: (screenSizeFeature as any)._id,
     });
@@ -140,7 +140,7 @@ async function seed() {
 
     // Create feature values for AirPods
     await featureValueService.create({
-      valueString: 'N/A',
+      valueString: "N/A",
       resourceId: (airpods as any)._id,
       featureId: (screenSizeFeature as any)._id,
     });
@@ -159,7 +159,7 @@ async function seed() {
 
     // Create feature values for Chair
     await featureValueService.create({
-      valueString: 'Couro sintético',
+      valueString: "Couro sintético",
       resourceId: (chair as any)._id,
       featureId: (materialFeature as any)._id,
     });
@@ -172,7 +172,7 @@ async function seed() {
 
     // Create feature values for Desk
     await featureValueService.create({
-      valueString: 'Madeira MDF',
+      valueString: "Madeira MDF",
       resourceId: (desk as any)._id,
       featureId: (materialFeature as any)._id,
     });
@@ -183,8 +183,8 @@ async function seed() {
       featureId: (weightFeature as any)._id,
     });
 
-    console.log('✅ Feature values created');
-    console.log('🎉 Database seeding completed successfully!');
+    console.log("✅ Feature values created");
+    console.log("🎉 Database seeding completed successfully!");
 
     // Display summary
     const categories = await categoryService.findAll();
@@ -192,14 +192,13 @@ async function seed() {
     const resources = await resourceService.findAll();
     const featureValues = await featureValueService.findAll();
 
-    console.log('\n📊 Summary:');
+    console.log("\n📊 Summary:");
     console.log(`Categories: ${categories.length}`);
     console.log(`Features: ${features.length}`);
     console.log(`Resources: ${resources.length}`);
     console.log(`Feature Values: ${featureValues.length}`);
-
   } catch (error) {
-    console.error('❌ Error during seeding:', error);
+    console.error("❌ Error during seeding:", error);
   } finally {
     await app.close();
   }

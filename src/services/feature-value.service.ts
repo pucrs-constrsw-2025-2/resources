@@ -1,9 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { FeatureValue, FeatureValueDocument } from '../entities/feature-value.entity';
-import { CreateFeatureValueDto } from '../dto/create-feature-value.dto';
-import { UpdateFeatureValueDto } from '../dto/update-feature-value.dto';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, Types } from "mongoose";
+import {
+  FeatureValue,
+  FeatureValueDocument,
+} from "../entities/feature-value.entity";
+import { CreateFeatureValueDto } from "../dto/create-feature-value.dto";
+import { UpdateFeatureValueDto } from "../dto/update-feature-value.dto";
 
 @Injectable()
 export class FeatureValueService {
@@ -12,25 +19,23 @@ export class FeatureValueService {
     private readonly featureValueModel: Model<FeatureValueDocument>,
   ) {}
 
-  async create(createFeatureValueDto: CreateFeatureValueDto): Promise<FeatureValue> {
+  async create(
+    createFeatureValueDto: CreateFeatureValueDto,
+  ): Promise<FeatureValue> {
     const featureValue = new this.featureValueModel(createFeatureValueDto);
     return await featureValue.save();
   }
 
   async findAll(): Promise<FeatureValue[]> {
-    return await this.featureValueModel
-      .find()
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    return await this.featureValueModel.find().exec();
   }
 
   async findOne(id: string): Promise<FeatureValue> {
-    const featureValue = await this.featureValueModel
-      .findById(id)
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
+    const featureValue = await this.featureValueModel.findById(id).exec();
 
     if (!featureValue) {
       throw new NotFoundException(`FeatureValue with ID ${id} not found`);
@@ -40,26 +45,31 @@ export class FeatureValueService {
   }
 
   async findByResource(resourceId: string): Promise<FeatureValue[]> {
-    return await this.featureValueModel
-      .find({ resourceId: new Types.ObjectId(resourceId) })
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    // Validate ObjectId format to prevent injection
+    if (!Types.ObjectId.isValid(resourceId)) {
+      return [];
+    }
+    return await this.featureValueModel.find({ resourceId }).exec();
   }
 
   async findByFeature(featureId: string): Promise<FeatureValue[]> {
-    return await this.featureValueModel
-      .find({ featureId: new Types.ObjectId(featureId) })
-      .populate('resourceId')
-      .populate('featureId')
-      .exec();
+    // Validate ObjectId format to prevent injection
+    if (!Types.ObjectId.isValid(featureId)) {
+      return [];
+    }
+    return await this.featureValueModel.find({ featureId }).exec();
   }
 
-  async update(id: string, updateFeatureValueDto: UpdateFeatureValueDto): Promise<FeatureValue> {
+  async update(
+    id: string,
+    updateFeatureValueDto: UpdateFeatureValueDto,
+  ): Promise<FeatureValue> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const featureValue = await this.featureValueModel
       .findByIdAndUpdate(id, updateFeatureValueDto, { new: true })
-      .populate('resourceId')
-      .populate('featureId')
       .exec();
 
     if (!featureValue) {
@@ -70,8 +80,12 @@ export class FeatureValueService {
   }
 
   async remove(id: string): Promise<void> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const result = await this.featureValueModel.findByIdAndDelete(id).exec();
-    
+
     if (!result) {
       throw new NotFoundException(`FeatureValue with ID ${id} not found`);
     }

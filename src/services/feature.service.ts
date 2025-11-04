@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { Feature, FeatureDocument } from '../entities/feature.entity';
-import { CreateFeatureDto } from '../dto/create-feature.dto';
-import { UpdateFeatureDto } from '../dto/update-feature.dto';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, Types } from "mongoose";
+import { Feature, FeatureDocument } from "../entities/feature.entity";
+import { CreateFeatureDto } from "../dto/create-feature.dto";
+import { UpdateFeatureDto } from "../dto/update-feature.dto";
 
 @Injectable()
 export class FeatureService {
@@ -18,11 +22,15 @@ export class FeatureService {
   }
 
   async findAll(): Promise<Feature[]> {
-    return await this.featureModel.find().populate('categoryId').exec();
+    return await this.featureModel.find().exec();
   }
 
   async findOne(id: string): Promise<Feature> {
-    const feature = await this.featureModel.findById(id).populate('categoryId').exec();
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
+    const feature = await this.featureModel.findById(id).exec();
 
     if (!feature) {
       throw new NotFoundException(`Feature with ID ${id} not found`);
@@ -32,16 +40,23 @@ export class FeatureService {
   }
 
   async findByCategory(categoryId: string): Promise<Feature[]> {
-    return await this.featureModel
-      .find({ categoryId: new Types.ObjectId(categoryId) })
-      .populate('categoryId')
-      .exec();
+    // Validate ObjectId format to prevent injection
+    if (!Types.ObjectId.isValid(categoryId)) {
+      return [];
+    }
+    return await this.featureModel.find({ categoryId }).exec();
   }
 
-  async update(id: string, updateFeatureDto: UpdateFeatureDto): Promise<Feature> {
+  async update(
+    id: string,
+    updateFeatureDto: UpdateFeatureDto,
+  ): Promise<Feature> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const feature = await this.featureModel
       .findByIdAndUpdate(id, updateFeatureDto, { new: true })
-      .populate('categoryId')
       .exec();
 
     if (!feature) {
@@ -52,8 +67,12 @@ export class FeatureService {
   }
 
   async remove(id: string): Promise<void> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException(`Invalid ObjectId format: ${id}`);
+    }
+
     const result = await this.featureModel.findByIdAndDelete(id).exec();
-    
+
     if (!result) {
       throw new NotFoundException(`Feature with ID ${id} not found`);
     }
