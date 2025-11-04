@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { Feature, FeatureDocument } from "../entities/feature.entity";
 import { CreateFeatureDto } from "../dto/create-feature.dto";
 import { UpdateFeatureDto } from "../dto/update-feature.dto";
@@ -32,6 +32,10 @@ export class FeatureService {
   }
 
   async findByCategory(categoryId: string): Promise<Feature[]> {
+    // Validate ObjectId format to prevent injection
+    if (!Types.ObjectId.isValid(categoryId)) {
+      return [];
+    }
     return await this.featureModel.find({ categoryId }).exec();
   }
 

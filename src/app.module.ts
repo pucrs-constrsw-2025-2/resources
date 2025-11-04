@@ -50,7 +50,9 @@ import {
 
         const uri = `mongodb://${username}:${password}@${host}:${port}/${database}?authSource=admin`;
 
-        console.log("MongoDB URI:", uri.replace(password, "***"));
+        // Log connection info without exposing the password
+        const maskedUri = `mongodb://${username}:***@${host}:${port}/${database}?authSource=admin`;
+        console.log("MongoDB URI:", maskedUri);
 
         return {
           uri,

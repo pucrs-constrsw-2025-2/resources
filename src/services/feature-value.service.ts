@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import {
   FeatureValue,
   FeatureValueDocument,
@@ -37,10 +37,18 @@ export class FeatureValueService {
   }
 
   async findByResource(resourceId: string): Promise<FeatureValue[]> {
+    // Validate ObjectId format to prevent injection
+    if (!Types.ObjectId.isValid(resourceId)) {
+      return [];
+    }
     return await this.featureValueModel.find({ resourceId }).exec();
   }
 
   async findByFeature(featureId: string): Promise<FeatureValue[]> {
+    // Validate ObjectId format to prevent injection
+    if (!Types.ObjectId.isValid(featureId)) {
+      return [];
+    }
     return await this.featureValueModel.find({ featureId }).exec();
   }
 

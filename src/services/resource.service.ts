@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { Resource, ResourceDocument } from "../entities/resource.entity";
 import { CreateResourceDto } from "../dto/create-resource.dto";
 import { UpdateResourceDto } from "../dto/update-resource.dto";
@@ -32,6 +32,10 @@ export class ResourceService {
   }
 
   async findByCategory(categoryId: string): Promise<Resource[]> {
+    // Validate ObjectId format to prevent injection
+    if (!Types.ObjectId.isValid(categoryId)) {
+      return [];
+    }
     return await this.resourceModel.find({ categoryId }).exec();
   }
 
