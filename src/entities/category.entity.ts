@@ -1,9 +1,9 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document } from "mongoose";
 
 export type CategoryDocument = Category & Document;
 
-@Schema({ collection: 'categories', timestamps: true })
+@Schema({ collection: "categories", timestamps: true })
 export class Category {
   @Prop({ required: true })
   name: string;

@@ -1,10 +1,16 @@
-import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsBoolean,
+  IsOptional,
+} from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateFeatureValueDto {
   @ApiProperty({
-    description: 'String value',
-    example: '6.1 inches',
+    description: "String value",
+    example: "6.1 inches",
     required: false,
   })
   @IsOptional()
@@ -12,7 +18,7 @@ export class CreateFeatureValueDto {
   valueString?: string;
 
   @ApiProperty({
-    description: 'Number value',
+    description: "Number value",
     example: 128,
     required: false,
   })
@@ -21,7 +27,7 @@ export class CreateFeatureValueDto {
   valueNumber?: number;
 
   @ApiProperty({
-    description: 'Boolean value',
+    description: "Boolean value",
     example: true,
     required: false,
   })
@@ -30,16 +36,16 @@ export class CreateFeatureValueDto {
   valueBoolean?: boolean;
 
   @ApiProperty({
-    description: 'Resource ID',
-    example: '507f1f77bcf86cd799439011',
+    description: "Resource ID",
+    example: "507f1f77bcf86cd799439011",
   })
   @IsString()
   @IsNotEmpty()
   resourceId: string;
 
   @ApiProperty({
-    description: 'Feature ID',
-    example: '507f1f77bcf86cd799439011',
+    description: "Feature ID",
+    example: "507f1f77bcf86cd799439011",
   })
   @IsString()
   @IsNotEmpty()

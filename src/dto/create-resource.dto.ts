@@ -1,10 +1,17 @@
-import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional, MaxLength, Min } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsBoolean,
+  MaxLength,
+  Min,
+} from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateResourceDto {
   @ApiProperty({
-    description: 'Resource name',
-    example: 'iPhone 14',
+    description: "Resource name",
+    example: "iPhone 14",
     maxLength: 255,
   })
   @IsString()
@@ -13,7 +20,7 @@ export class CreateResourceDto {
   name: string;
 
   @ApiProperty({
-    description: 'Resource quantity',
+    description: "Resource quantity",
     example: 10,
     minimum: 0,
   })
@@ -22,15 +29,15 @@ export class CreateResourceDto {
   quantity: number;
 
   @ApiProperty({
-    description: 'Resource status (active/inactive)',
+    description: "Resource status (active/inactive)",
     example: true,
   })
   @IsBoolean()
   status: boolean;
 
   @ApiProperty({
-    description: 'Category ID',
-    example: '507f1f77bcf86cd799439011',
+    description: "Category ID",
+    example: "507f1f77bcf86cd799439011",
   })
   @IsString()
   @IsNotEmpty()

@@ -1,9 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { FeatureValue, FeatureValueDocument } from '../entities/feature-value.entity';
-import { CreateFeatureValueDto } from '../dto/create-feature-value.dto';
-import { UpdateFeatureValueDto } from '../dto/update-feature-value.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import {
+  FeatureValue,
+  FeatureValueDocument,
+} from "../entities/feature-value.entity";
+import { CreateFeatureValueDto } from "../dto/create-feature-value.dto";
+import { UpdateFeatureValueDto } from "../dto/update-feature-value.dto";
 
 @Injectable()
 export class FeatureValueService {
@@ -12,7 +15,9 @@ export class FeatureValueService {
     private readonly featureValueModel: Model<FeatureValueDocument>,
   ) {}
 
-  async create(createFeatureValueDto: CreateFeatureValueDto): Promise<FeatureValue> {
+  async create(
+    createFeatureValueDto: CreateFeatureValueDto,
+  ): Promise<FeatureValue> {
     const featureValue = new this.featureValueModel(createFeatureValueDto);
     return await featureValue.save();
   }
@@ -39,7 +44,10 @@ export class FeatureValueService {
     return await this.featureValueModel.find({ featureId }).exec();
   }
 
-  async update(id: string, updateFeatureValueDto: UpdateFeatureValueDto): Promise<FeatureValue> {
+  async update(
+    id: string,
+    updateFeatureValueDto: UpdateFeatureValueDto,
+  ): Promise<FeatureValue> {
     const featureValue = await this.featureValueModel
       .findByIdAndUpdate(id, updateFeatureValueDto, { new: true })
       .exec();
@@ -53,7 +61,7 @@ export class FeatureValueService {
 
   async remove(id: string): Promise<void> {
     const result = await this.featureValueModel.findByIdAndDelete(id).exec();
-    
+
     if (!result) {
       throw new NotFoundException(`FeatureValue with ID ${id} not found`);
     }

@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Feature, FeatureDocument } from '../entities/feature.entity';
-import { CreateFeatureDto } from '../dto/create-feature.dto';
-import { UpdateFeatureDto } from '../dto/update-feature.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { Feature, FeatureDocument } from "../entities/feature.entity";
+import { CreateFeatureDto } from "../dto/create-feature.dto";
+import { UpdateFeatureDto } from "../dto/update-feature.dto";
 
 @Injectable()
 export class FeatureService {
@@ -35,7 +35,10 @@ export class FeatureService {
     return await this.featureModel.find({ categoryId }).exec();
   }
 
-  async update(id: string, updateFeatureDto: UpdateFeatureDto): Promise<Feature> {
+  async update(
+    id: string,
+    updateFeatureDto: UpdateFeatureDto,
+  ): Promise<Feature> {
     const feature = await this.featureModel
       .findByIdAndUpdate(id, updateFeatureDto, { new: true })
       .exec();
@@ -49,7 +52,7 @@ export class FeatureService {
 
   async remove(id: string): Promise<void> {
     const result = await this.featureModel.findByIdAndDelete(id).exec();
-    
+
     if (!result) {
       throw new NotFoundException(`Feature with ID ${id} not found`);
     }
