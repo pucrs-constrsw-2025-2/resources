@@ -9,7 +9,6 @@ import {
   Query,
   Delete,
   ValidationPipe,
-  ParseUUIDPipe,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { ResourceService } from "../services/resource.service";
@@ -58,7 +57,7 @@ export class ResourceController {
     type: Resource,
   })
   @ApiResponse({ status: 404, description: "Resource not found." })
-  async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<Resource> {
+  async findOne(@Param("id") id: string): Promise<Resource> {
     return await this.resourceService.findOne(id);
   }
 
@@ -71,7 +70,7 @@ export class ResourceController {
     type: [Resource],
   })
   async findByCategory(
-    @Param("categoryId", ParseUUIDPipe) categoryId: string,
+    @Param("categoryId") categoryId: string,
   ): Promise<Resource[]> {
     return await this.resourceService.findByCategory(categoryId);
   }
@@ -86,7 +85,7 @@ export class ResourceController {
   })
   @ApiResponse({ status: 404, description: "Resource not found." })
   async update(
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param("id") id: string,
     @Body(ValidationPipe) updateResourceDto: UpdateResourceDto,
   ): Promise<Resource> {
     return await this.resourceService.update(id, updateResourceDto);
@@ -96,7 +95,7 @@ export class ResourceController {
   @ApiOperation({ summary: "Replace a resource" })
   @ApiParam({ name: "id", description: "Resource ID", type: "string" })
   async replace(
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param("id") id: string,
     @Body(ValidationPipe) updateResourceDto: UpdateResourceDto,
   ): Promise<Resource> {
     return await this.resourceService.update(id, updateResourceDto);
@@ -110,7 +109,7 @@ export class ResourceController {
     description: "The resource has been successfully deleted.",
   })
   @ApiResponse({ status: 404, description: "Resource not found." })
-  async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
+  async remove(@Param("id") id: string): Promise<void> {
     return await this.resourceService.remove(id);
   }
 }

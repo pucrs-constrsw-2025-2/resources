@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ValidationPipe,
-  ParseUUIDPipe,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { FeatureValueService } from "../services/feature-value.service";
@@ -53,7 +52,7 @@ export class FeatureValueController {
     type: FeatureValue,
   })
   @ApiResponse({ status: 404, description: "FeatureValue not found." })
-  async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<FeatureValue> {
+  async findOne(@Param("id") id: string): Promise<FeatureValue> {
     return await this.featureValueService.findOne(id);
   }
 
@@ -66,7 +65,7 @@ export class FeatureValueController {
     type: [FeatureValue],
   })
   async findByResource(
-    @Param("resourceId", ParseUUIDPipe) resourceId: string,
+    @Param("resourceId") resourceId: string,
   ): Promise<FeatureValue[]> {
     return await this.featureValueService.findByResource(resourceId);
   }
@@ -74,7 +73,7 @@ export class FeatureValueController {
   @Post("/resources/:resourceId/features")
   @ApiOperation({ summary: "Create a feature value for a resource" })
   async createForResource(
-    @Param("resourceId", ParseUUIDPipe) resourceId: string,
+    @Param("resourceId") resourceId: string,
     @Body(ValidationPipe) createFeatureValueDto: CreateFeatureValueDto,
   ): Promise<FeatureValue> {
     createFeatureValueDto.resourceId = resourceId;
@@ -84,7 +83,7 @@ export class FeatureValueController {
   @Get("/resources/:resourceId/features")
   @ApiOperation({ summary: "Get feature values for a resource" })
   async findAllForResource(
-    @Param("resourceId", ParseUUIDPipe) resourceId: string,
+    @Param("resourceId") resourceId: string,
   ): Promise<FeatureValue[]> {
     return await this.featureValueService.findByResource(resourceId);
   }
@@ -92,8 +91,8 @@ export class FeatureValueController {
   @Get("/resources/:resourceId/features/:featureValueId")
   @ApiOperation({ summary: "Get a feature value by id for a resource" })
   async findOneForResource(
-    @Param("resourceId", ParseUUIDPipe) resourceId: string,
-    @Param("featureValueId", ParseUUIDPipe) featureValueId: string,
+    @Param("resourceId") resourceId: string,
+    @Param("featureValueId") featureValueId: string,
   ): Promise<FeatureValue> {
     const fv = await this.featureValueService.findOne(featureValueId);
     if (fv.resourceId.toString() !== resourceId) {
@@ -105,8 +104,8 @@ export class FeatureValueController {
   @Patch("/resources/:resourceId/features/:featureValueId")
   @ApiOperation({ summary: "Update a feature value for a resource" })
   async updateForResource(
-    @Param("resourceId", ParseUUIDPipe) resourceId: string,
-    @Param("featureValueId", ParseUUIDPipe) featureValueId: string,
+    @Param("resourceId") resourceId: string,
+    @Param("featureValueId") featureValueId: string,
     @Body(ValidationPipe) updateFeatureValueDto: UpdateFeatureValueDto,
   ): Promise<FeatureValue> {
     const fv = await this.featureValueService.findOne(featureValueId);
@@ -122,8 +121,8 @@ export class FeatureValueController {
   @Delete("/resources/:resourceId/features/:featureValueId")
   @ApiOperation({ summary: "Delete a feature value for a resource" })
   async removeForResource(
-    @Param("resourceId", ParseUUIDPipe) resourceId: string,
-    @Param("featureValueId", ParseUUIDPipe) featureValueId: string,
+    @Param("resourceId") resourceId: string,
+    @Param("featureValueId") featureValueId: string,
   ): Promise<void> {
     const fv = await this.featureValueService.findOne(featureValueId);
     if (fv.resourceId.toString() !== resourceId) {
@@ -141,7 +140,7 @@ export class FeatureValueController {
     type: [FeatureValue],
   })
   async findByFeature(
-    @Param("featureId", ParseUUIDPipe) featureId: string,
+    @Param("featureId") featureId: string,
   ): Promise<FeatureValue[]> {
     return await this.featureValueService.findByFeature(featureId);
   }
@@ -156,7 +155,7 @@ export class FeatureValueController {
   })
   @ApiResponse({ status: 404, description: "FeatureValue not found." })
   async update(
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param("id") id: string,
     @Body(ValidationPipe) updateFeatureValueDto: UpdateFeatureValueDto,
   ): Promise<FeatureValue> {
     return await this.featureValueService.update(id, updateFeatureValueDto);
@@ -170,7 +169,7 @@ export class FeatureValueController {
     description: "The feature value has been successfully deleted.",
   })
   @ApiResponse({ status: 404, description: "FeatureValue not found." })
-  async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
+  async remove(@Param("id") id: string): Promise<void> {
     return await this.featureValueService.remove(id);
   }
 }

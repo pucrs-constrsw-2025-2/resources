@@ -9,7 +9,6 @@ import {
   Query,
   Delete,
   ValidationPipe,
-  ParseUUIDPipe,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 import { FeatureService } from "../services/feature.service";
@@ -58,7 +57,7 @@ export class FeatureController {
     type: Feature,
   })
   @ApiResponse({ status: 404, description: "Feature not found." })
-  async findOne(@Param("id", ParseUUIDPipe) id: string): Promise<Feature> {
+  async findOne(@Param("id") id: string): Promise<Feature> {
     return await this.featureService.findOne(id);
   }
 
@@ -71,7 +70,7 @@ export class FeatureController {
     type: [Feature],
   })
   async findByCategory(
-    @Param("categoryId", ParseUUIDPipe) categoryId: string,
+    @Param("categoryId") categoryId: string,
   ): Promise<Feature[]> {
     return await this.featureService.findByCategory(categoryId);
   }
@@ -86,7 +85,7 @@ export class FeatureController {
   })
   @ApiResponse({ status: 404, description: "Feature not found." })
   async update(
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param("id") id: string,
     @Body(ValidationPipe) updateFeatureDto: UpdateFeatureDto,
   ): Promise<Feature> {
     return await this.featureService.update(id, updateFeatureDto);
@@ -96,7 +95,7 @@ export class FeatureController {
   @ApiOperation({ summary: "Replace a feature" })
   @ApiParam({ name: "id", description: "Feature ID", type: "string" })
   async replace(
-    @Param("id", ParseUUIDPipe) id: string,
+    @Param("id") id: string,
     @Body(ValidationPipe) updateFeatureDto: UpdateFeatureDto,
   ): Promise<Feature> {
     return await this.featureService.update(id, updateFeatureDto);
@@ -110,7 +109,7 @@ export class FeatureController {
     description: "The feature has been successfully deleted.",
   })
   @ApiResponse({ status: 404, description: "Feature not found." })
-  async remove(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
+  async remove(@Param("id") id: string): Promise<void> {
     return await this.featureService.remove(id);
   }
 }
