@@ -7,6 +7,7 @@ import { ResourceController } from './controllers/resource.controller';
 import { FeatureValueController } from './controllers/feature-value.controller';
 import { ValueTypesController } from './controllers/value-types.controller';
 import { HealthController } from './controllers/health.controller';
+import { MetricsController } from './metrics.controller';
 import { CategoryService } from './services/category.service';
 import { FeatureService } from './services/feature.service';
 import { ResourceService } from './services/resource.service';
@@ -55,6 +56,7 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
     FeatureValueController,
     ValueTypesController,
     HealthController,
+    MetricsController,
   ],
   providers: [
     CategoryService,

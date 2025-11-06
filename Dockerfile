@@ -4,10 +4,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json ./
+# Copy lockfile if it exists, otherwise it will be generated
+COPY package-lock.json* ./
 
-# Install dependencies
-RUN npm ci
+# Try to install. If lockfile is out of sync, update it and install again
+RUN npm ci --no-audit --no-fund || \
+    (npm install --package-lock-only --no-audit --no-fund && npm ci --no-audit --no-fund)
 
 # Copy source code
 COPY . .
@@ -24,10 +27,12 @@ WORKDIR /app
 RUN apk add --no-cache curl
 
 # Copy package files
-COPY package*.json ./
+COPY package.json ./
+COPY package-lock.json* ./
 
-# Install only production dependencies
-RUN npm ci --only=production
+# Try to install production dependencies. If lockfile is out of sync, update it and install again
+RUN npm ci --omit=dev --no-audit --no-fund || \
+    (npm install --package-lock-only --omit=dev --no-audit --no-fund && npm ci --omit=dev --no-audit --no-fund)
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist

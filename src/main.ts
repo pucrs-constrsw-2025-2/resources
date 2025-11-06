@@ -33,8 +33,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // Global API prefix
-  app.setGlobalPrefix('api/v1');
+  // Global API prefix (exclude actuator endpoints)
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['actuator/(.*)'],
+  });
 
   // Prefer service-scoped env var from root .env, fallback to PORT, then default
   const port = Number(process.env.RESOURCES_INTERNAL_API_PORT || process.env.PORT || 3000);
