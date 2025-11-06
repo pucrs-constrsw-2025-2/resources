@@ -6,6 +6,7 @@ import { FeatureController } from './controllers/feature.controller';
 import { ResourceController } from './controllers/resource.controller';
 import { FeatureValueController } from './controllers/feature-value.controller';
 import { ValueTypesController } from './controllers/value-types.controller';
+import { HealthController } from './controllers/health.controller';
 import { CategoryService } from './services/category.service';
 import { FeatureService } from './services/feature.service';
 import { ResourceService } from './services/resource.service';
@@ -30,7 +31,7 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
         const password = configService.get<string>('RESOURCES_MONGODB_PASSWORD', 'a12345678');
         const database = configService.get<string>('RESOURCES_MONGODB_DB', 'resources');
         
-        const uri = `mongodb://${username}:${password}@${host}:${port}/${database}?authSource=admin`;
+        const uri = `mongodb://${username}:${password}@${host}:${port}/${database}?authSource=${database}`;
         
         console.log('MongoDB URI:', uri.replace(password, '***'));
         
@@ -53,6 +54,7 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
     ResourceController,
     FeatureValueController,
     ValueTypesController,
+    HealthController,
   ],
   providers: [
     CategoryService,
