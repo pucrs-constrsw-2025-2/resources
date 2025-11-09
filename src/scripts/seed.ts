@@ -18,169 +18,342 @@ async function seed() {
     console.log('🌱 Starting database seeding...');
 
     // Create categories
-    const electronicsCategory = await categoryService.create({
-      name: 'Eletrônicos',
+    const audiovisualCategory = await categoryService.create({
+      name: 'Equipamentos Audiovisuais',
     });
 
-    const furnitureCategory = await categoryService.create({
-      name: 'Móveis',
+    const computingCategory = await categoryService.create({
+      name: 'Equipamentos de Informática',
+    });
+
+    const laboratoryCategory = await categoryService.create({
+      name: 'Equipamentos de Laboratório',
     });
 
     console.log('✅ Categories created');
 
-    // Create features for electronics
-    const screenSizeFeature = await featureService.create({
-      name: 'Tamanho da Tela',
+    // Create features for audiovisual equipment
+    const resolutionFeature = await featureService.create({
+      name: 'Resolução',
       type: ValueType.STRING,
-      categoryId: (electronicsCategory as any)._id,
+      categoryId: (audiovisualCategory as any)._id,
     });
 
-    const priceFeature = await featureService.create({
-      name: 'Preço',
-      type: ValueType.NUMBER,
-      categoryId: (electronicsCategory as any)._id,
+    const connectivityFeature = await featureService.create({
+      name: 'Conectividade',
+      type: ValueType.STRING,
+      categoryId: (audiovisualCategory as any)._id,
     });
 
-    const wirelessFeature = await featureService.create({
-      name: 'Sem Fio',
+    const portableFeature = await featureService.create({
+      name: 'Portátil',
       type: ValueType.BOOLEAN,
-      categoryId: (electronicsCategory as any)._id,
+      categoryId: (audiovisualCategory as any)._id,
     });
 
-    // Create features for furniture
-    const materialFeature = await featureService.create({
-      name: 'Material',
+    // Create features for computing equipment
+    const processorFeature = await featureService.create({
+      name: 'Processador',
       type: ValueType.STRING,
-      categoryId: (furnitureCategory as any)._id,
+      categoryId: (computingCategory as any)._id,
     });
 
-    const weightFeature = await featureService.create({
-      name: 'Peso (kg)',
-      type: ValueType.NUMBER,
-      categoryId: (furnitureCategory as any)._id,
+    const ramFeature = await featureService.create({
+      name: 'Memória RAM',
+      type: ValueType.STRING,
+      categoryId: (computingCategory as any)._id,
+    });
+
+    const storageFeature = await featureService.create({
+      name: 'Armazenamento',
+      type: ValueType.STRING,
+      categoryId: (computingCategory as any)._id,
+    });
+
+    // Create features for laboratory equipment
+    const capacityFeature = await featureService.create({
+      name: 'Capacidade',
+      type: ValueType.STRING,
+      categoryId: (laboratoryCategory as any)._id,
+    });
+
+    const voltageFeature = await featureService.create({
+      name: 'Voltagem',
+      type: ValueType.STRING,
+      categoryId: (laboratoryCategory as any)._id,
+    });
+
+    const calibrationFeature = await featureService.create({
+      name: 'Calibrado',
+      type: ValueType.BOOLEAN,
+      categoryId: (laboratoryCategory as any)._id,
     });
 
     console.log('✅ Features created');
 
-    // Create resources
-    const iphone = await resourceService.create({
-      name: 'iPhone 14',
-      quantity: 15,
-      status: true,
-      categoryId: (electronicsCategory as any)._id,
-    });
-
-    const samsung = await resourceService.create({
-      name: 'Samsung Galaxy S23',
-      quantity: 8,
-      status: true,
-      categoryId: (electronicsCategory as any)._id,
-    });
-
-    const airpods = await resourceService.create({
-      name: 'AirPods Pro',
-      quantity: 25,
-      status: true,
-      categoryId: (electronicsCategory as any)._id,
-    });
-
-    const chair = await resourceService.create({
-      name: 'Cadeira de Escritório',
+    // Create audiovisual resources
+    const projector = await resourceService.create({
+      name: 'Projetor Epson PowerLite',
       quantity: 12,
       status: true,
-      categoryId: (furnitureCategory as any)._id,
+      categoryId: (audiovisualCategory as any)._id,
     });
 
-    const desk = await resourceService.create({
-      name: 'Mesa de Computador',
+    const microphone = await resourceService.create({
+      name: 'Microfone sem fio Shure',
+      quantity: 8,
+      status: true,
+      categoryId: (audiovisualCategory as any)._id,
+    });
+
+    const speaker = await resourceService.create({
+      name: 'Caixa de Som Amplificada',
+      quantity: 6,
+      status: true,
+      categoryId: (audiovisualCategory as any)._id,
+    });
+
+    const videoCamera = await resourceService.create({
+      name: 'Câmera de Vídeo Sony 4K',
+      quantity: 4,
+      status: true,
+      categoryId: (audiovisualCategory as any)._id,
+    });
+
+    // Create computing resources
+    const laptop = await resourceService.create({
+      name: 'Notebook Dell Inspiron',
+      quantity: 20,
+      status: true,
+      categoryId: (computingCategory as any)._id,
+    });
+
+    const tablet = await resourceService.create({
+      name: 'Tablet Samsung Galaxy Tab',
+      quantity: 15,
+      status: true,
+      categoryId: (computingCategory as any)._id,
+    });
+
+    const adapter = await resourceService.create({
+      name: 'Adaptador HDMI/VGA',
+      quantity: 25,
+      status: true,
+      categoryId: (computingCategory as any)._id,
+    });
+
+    // Create laboratory resources
+    const oscilloscope = await resourceService.create({
+      name: 'Osciloscópio Digital',
       quantity: 5,
+      status: true,
+      categoryId: (laboratoryCategory as any)._id,
+    });
+
+    const multimeter = await resourceService.create({
+      name: 'Multímetro Digital Fluke',
+      quantity: 10,
+      status: true,
+      categoryId: (laboratoryCategory as any)._id,
+    });
+
+    const powerSupply = await resourceService.create({
+      name: 'Fonte de Alimentação DC',
+      quantity: 8,
       status: false,
-      categoryId: (furnitureCategory as any)._id,
+      categoryId: (laboratoryCategory as any)._id,
     });
 
     console.log('✅ Resources created');
 
-    // Create feature values for iPhone
+    // Create feature values for Projector
     await featureValueService.create({
-      valueString: '6.1 polegadas',
-      resourceId: (iphone as any)._id,
-      featureId: (screenSizeFeature as any)._id,
+      valueString: '1920x1080 Full HD',
+      resourceId: (projector as any)._id,
+      featureId: (resolutionFeature as any)._id,
     });
 
     await featureValueService.create({
-      valueNumber: 4999.99,
-      resourceId: (iphone as any)._id,
-      featureId: (priceFeature as any)._id,
-    });
-
-    await featureValueService.create({
-      valueBoolean: true,
-      resourceId: (iphone as any)._id,
-      featureId: (wirelessFeature as any)._id,
-    });
-
-    // Create feature values for Samsung
-    await featureValueService.create({
-      valueString: '6.1 polegadas',
-      resourceId: (samsung as any)._id,
-      featureId: (screenSizeFeature as any)._id,
-    });
-
-    await featureValueService.create({
-      valueNumber: 3999.99,
-      resourceId: (samsung as any)._id,
-      featureId: (priceFeature as any)._id,
+      valueString: 'HDMI, VGA, USB',
+      resourceId: (projector as any)._id,
+      featureId: (connectivityFeature as any)._id,
     });
 
     await featureValueService.create({
       valueBoolean: true,
-      resourceId: (samsung as any)._id,
-      featureId: (wirelessFeature as any)._id,
+      resourceId: (projector as any)._id,
+      featureId: (portableFeature as any)._id,
     });
 
-    // Create feature values for AirPods
+    // Create feature values for Microphone
     await featureValueService.create({
       valueString: 'N/A',
-      resourceId: (airpods as any)._id,
-      featureId: (screenSizeFeature as any)._id,
+      resourceId: (microphone as any)._id,
+      featureId: (resolutionFeature as any)._id,
     });
 
     await featureValueService.create({
-      valueNumber: 1299.99,
-      resourceId: (airpods as any)._id,
-      featureId: (priceFeature as any)._id,
+      valueString: 'Wireless 2.4GHz',
+      resourceId: (microphone as any)._id,
+      featureId: (connectivityFeature as any)._id,
     });
 
     await featureValueService.create({
       valueBoolean: true,
-      resourceId: (airpods as any)._id,
-      featureId: (wirelessFeature as any)._id,
+      resourceId: (microphone as any)._id,
+      featureId: (portableFeature as any)._id,
     });
 
-    // Create feature values for Chair
+    // Create feature values for Speaker
     await featureValueService.create({
-      valueString: 'Couro sintético',
-      resourceId: (chair as any)._id,
-      featureId: (materialFeature as any)._id,
-    });
-
-    await featureValueService.create({
-      valueNumber: 15.5,
-      resourceId: (chair as any)._id,
-      featureId: (weightFeature as any)._id,
-    });
-
-    // Create feature values for Desk
-    await featureValueService.create({
-      valueString: 'Madeira MDF',
-      resourceId: (desk as any)._id,
-      featureId: (materialFeature as any)._id,
+      valueString: 'N/A',
+      resourceId: (speaker as any)._id,
+      featureId: (resolutionFeature as any)._id,
     });
 
     await featureValueService.create({
-      valueNumber: 32.0,
-      resourceId: (desk as any)._id,
-      featureId: (weightFeature as any)._id,
+      valueString: 'Bluetooth, Auxiliar, USB',
+      resourceId: (speaker as any)._id,
+      featureId: (connectivityFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueBoolean: true,
+      resourceId: (speaker as any)._id,
+      featureId: (portableFeature as any)._id,
+    });
+
+    // Create feature values for Video Camera
+    await featureValueService.create({
+      valueString: '3840x2160 4K UHD',
+      resourceId: (videoCamera as any)._id,
+      featureId: (resolutionFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: 'HDMI, USB-C, Wi-Fi',
+      resourceId: (videoCamera as any)._id,
+      featureId: (connectivityFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueBoolean: true,
+      resourceId: (videoCamera as any)._id,
+      featureId: (portableFeature as any)._id,
+    });
+
+    // Create feature values for Laptop
+    await featureValueService.create({
+      valueString: 'Intel Core i5 11ª geração',
+      resourceId: (laptop as any)._id,
+      featureId: (processorFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: '8GB DDR4',
+      resourceId: (laptop as any)._id,
+      featureId: (ramFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: '256GB SSD',
+      resourceId: (laptop as any)._id,
+      featureId: (storageFeature as any)._id,
+    });
+
+    // Create feature values for Tablet
+    await featureValueService.create({
+      valueString: 'Snapdragon 865',
+      resourceId: (tablet as any)._id,
+      featureId: (processorFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: '6GB',
+      resourceId: (tablet as any)._id,
+      featureId: (ramFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: '128GB',
+      resourceId: (tablet as any)._id,
+      featureId: (storageFeature as any)._id,
+    });
+
+    // Create feature values for Adapter
+    await featureValueService.create({
+      valueString: 'N/A',
+      resourceId: (adapter as any)._id,
+      featureId: (processorFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: 'N/A',
+      resourceId: (adapter as any)._id,
+      featureId: (ramFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: 'N/A',
+      resourceId: (adapter as any)._id,
+      featureId: (storageFeature as any)._id,
+    });
+
+    // Create feature values for Oscilloscope
+    await featureValueService.create({
+      valueString: '100 MHz, 4 canais',
+      resourceId: (oscilloscope as any)._id,
+      featureId: (capacityFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: '110V/220V',
+      resourceId: (oscilloscope as any)._id,
+      featureId: (voltageFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueBoolean: true,
+      resourceId: (oscilloscope as any)._id,
+      featureId: (calibrationFeature as any)._id,
+    });
+
+    // Create feature values for Multimeter
+    await featureValueService.create({
+      valueString: '1000V, 10A',
+      resourceId: (multimeter as any)._id,
+      featureId: (capacityFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: 'Bateria 9V',
+      resourceId: (multimeter as any)._id,
+      featureId: (voltageFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueBoolean: true,
+      resourceId: (multimeter as any)._id,
+      featureId: (calibrationFeature as any)._id,
+    });
+
+    // Create feature values for Power Supply
+    await featureValueService.create({
+      valueString: '0-30V, 0-5A',
+      resourceId: (powerSupply as any)._id,
+      featureId: (capacityFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueString: '110V/220V',
+      resourceId: (powerSupply as any)._id,
+      featureId: (voltageFeature as any)._id,
+    });
+
+    await featureValueService.create({
+      valueBoolean: false,
+      resourceId: (powerSupply as any)._id,
+      featureId: (calibrationFeature as any)._id,
     });
 
     console.log('✅ Feature values created');
