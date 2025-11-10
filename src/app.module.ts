@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoryController } from './controllers/category.controller';
@@ -6,8 +7,7 @@ import { FeatureController } from './controllers/feature.controller';
 import { ResourceController } from './controllers/resource.controller';
 import { FeatureValueController } from './controllers/feature-value.controller';
 import { ValueTypesController } from './controllers/value-types.controller';
-import { HealthController } from './controllers/health.controller';
-import { MetricsController } from './metrics.controller';
+import { HealthController } from './health.controller';
 import { CategoryService } from './services/category.service';
 import { FeatureService } from './services/feature.service';
 import { ResourceService } from './services/resource.service';
@@ -19,6 +19,7 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
 
 @Module({
   imports: [
+    TerminusModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '../../.env', // Path to root .env file
@@ -56,7 +57,6 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
     FeatureValueController,
     ValueTypesController,
     HealthController,
-    MetricsController,
   ],
   providers: [
     CategoryService,

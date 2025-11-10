@@ -1,3 +1,4 @@
+import './instrumentation';
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -33,9 +34,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // Global API prefix (exclude actuator endpoints)
+  // Global API prefix (exclude actuator endpoints and /health)
   app.setGlobalPrefix('api/v1', {
-    exclude: ['actuator/(.*)'],
+    exclude: ['actuator/(.*)', 'health'],
   });
 
   // Prefer service-scoped env var from root .env, fallback to PORT, then default

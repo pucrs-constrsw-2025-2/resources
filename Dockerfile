@@ -9,8 +9,8 @@ COPY package.json ./
 COPY package-lock.json* ./
 
 # Try to install. If lockfile is out of sync, update it and install again
-RUN npm ci --no-audit --no-fund || \
-    (npm install --package-lock-only --no-audit --no-fund && npm ci --no-audit --no-fund)
+RUN npm install --legacy-peer-deps --no-audit --no-fund || \
+    (npm install --package-lock-only --legacy-peer-deps --no-audit --no-fund && npm install --legacy-peer-deps --no-audit --no-fund)
 
 # Copy source code
 COPY . .
@@ -31,8 +31,8 @@ COPY package.json ./
 COPY package-lock.json* ./
 
 # Try to install production dependencies. If lockfile is out of sync, update it and install again
-RUN npm ci --omit=dev --no-audit --no-fund || \
-    (npm install --package-lock-only --omit=dev --no-audit --no-fund && npm ci --omit=dev --no-audit --no-fund)
+RUN npm install --omit=dev --legacy-peer-deps --no-audit --no-fund || \
+    (npm install --package-lock-only --omit=dev --legacy-peer-deps --no-audit --no-fund && npm install --omit=dev --legacy-peer-deps --no-audit --no-fund)
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
