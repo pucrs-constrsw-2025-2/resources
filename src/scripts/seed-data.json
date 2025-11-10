@@ -1,0 +1,172 @@
+{
+  "categories": [
+    {
+      "name": "Equipamentos Audiovisuais"
+    },
+    {
+      "name": "Equipamentos de Informática"
+    },
+    {
+      "name": "Equipamentos de Laboratório"
+    }
+  ],
+  "features": [
+    {
+      "name": "Resolução",
+      "type": "STRING",
+      "categoryName": "Equipamentos Audiovisuais"
+    },
+    {
+      "name": "Conectividade",
+      "type": "STRING",
+      "categoryName": "Equipamentos Audiovisuais"
+    },
+    {
+      "name": "Portátil",
+      "type": "BOOLEAN",
+      "categoryName": "Equipamentos Audiovisuais"
+    },
+    {
+      "name": "Processador",
+      "type": "STRING",
+      "categoryName": "Equipamentos de Informática"
+    },
+    {
+      "name": "Memória RAM",
+      "type": "STRING",
+      "categoryName": "Equipamentos de Informática"
+    },
+    {
+      "name": "Armazenamento",
+      "type": "STRING",
+      "categoryName": "Equipamentos de Informática"
+    },
+    {
+      "name": "Capacidade",
+      "type": "STRING",
+      "categoryName": "Equipamentos de Laboratório"
+    },
+    {
+      "name": "Voltagem",
+      "type": "STRING",
+      "categoryName": "Equipamentos de Laboratório"
+    },
+    {
+      "name": "Calibrado",
+      "type": "BOOLEAN",
+      "categoryName": "Equipamentos de Laboratório"
+    }
+  ],
+  "resources": [
+    {
+      "name": "Projetor Epson PowerLite",
+      "quantity": 12,
+      "status": true,
+      "categoryName": "Equipamentos Audiovisuais",
+      "featureValues": {
+        "Resolução": "1920x1080 Full HD",
+        "Conectividade": "HDMI, VGA, USB",
+        "Portátil": true
+      }
+    },
+    {
+      "name": "Microfone sem fio Shure",
+      "quantity": 8,
+      "status": true,
+      "categoryName": "Equipamentos Audiovisuais",
+      "featureValues": {
+        "Resolução": "N/A",
+        "Conectividade": "Wireless 2.4GHz",
+        "Portátil": true
+      }
+    },
+    {
+      "name": "Caixa de Som Amplificada",
+      "quantity": 6,
+      "status": true,
+      "categoryName": "Equipamentos Audiovisuais",
+      "featureValues": {
+        "Resolução": "N/A",
+        "Conectividade": "Bluetooth, Auxiliar, USB",
+        "Portátil": true
+      }
+    },
+    {
+      "name": "Câmera de Vídeo Sony 4K",
+      "quantity": 4,
+      "status": true,
+      "categoryName": "Equipamentos Audiovisuais",
+      "featureValues": {
+        "Resolução": "3840x2160 4K UHD",
+        "Conectividade": "HDMI, USB-C, Wi-Fi",
+        "Portátil": true
+      }
+    },
+    {
+      "name": "Notebook Dell Inspiron",
+      "quantity": 20,
+      "status": true,
+      "categoryName": "Equipamentos de Informática",
+      "featureValues": {
+        "Processador": "Intel Core i5 11ª geração",
+        "Memória RAM": "8GB DDR4",
+        "Armazenamento": "256GB SSD"
+      }
+    },
+    {
+      "name": "Tablet Samsung Galaxy Tab",
+      "quantity": 15,
+      "status": true,
+      "categoryName": "Equipamentos de Informática",
+      "featureValues": {
+        "Processador": "Snapdragon 865",
+        "Memória RAM": "6GB",
+        "Armazenamento": "128GB"
+      }
+    },
+    {
+      "name": "Adaptador HDMI/VGA",
+      "quantity": 25,
+      "status": true,
+      "categoryName": "Equipamentos de Informática",
+      "featureValues": {
+        "Processador": "N/A",
+        "Memória RAM": "N/A",
+        "Armazenamento": "N/A"
+      }
+    },
+    {
+      "name": "Osciloscópio Digital",
+      "quantity": 5,
+      "status": true,
+      "categoryName": "Equipamentos de Laboratório",
+      "featureValues": {
+        "Capacidade": "100 MHz, 4 canais",
+        "Voltagem": "110V/220V",
+        "Calibrado": true
+      }
+    },
+    {
+      "name": "Multímetro Digital Fluke",
+      "quantity": 10,
+      "status": true,
+      "categoryName": "Equipamentos de Laboratório",
+      "featureValues": {
+        "Capacidade": "1000V, 10A",
+        "Voltagem": "Bateria 9V",
+        "Calibrado": true
+      }
+    },
+    {
+      "name": "Fonte de Alimentação DC",
+      "quantity": 8,
+      "status": false,
+      "categoryName": "Equipamentos de Laboratório",
+      "featureValues": {
+        "Capacidade": "0-30V, 0-5A",
+        "Voltagem": "110V/220V",
+        "Calibrado": false
+      }
+    }
+  ]
+}

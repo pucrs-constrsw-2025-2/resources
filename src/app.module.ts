@@ -12,6 +12,7 @@ import { CategoryService } from './services/category.service';
 import { FeatureService } from './services/feature.service';
 import { ResourceService } from './services/resource.service';
 import { FeatureValueService } from './services/feature-value.service';
+import { AutoSeedService } from './services/auto-seed.service';
 import { Category, CategorySchema } from './entities/category.entity';
 import { Feature, FeatureSchema } from './entities/feature.entity';
 import { Resource, ResourceSchema } from './entities/resource.entity';
@@ -63,6 +64,7 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
     FeatureService,
     ResourceService,
     FeatureValueService,
+    AutoSeedService,
   ],
 })
 export class AppModule {}

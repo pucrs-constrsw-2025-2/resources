@@ -6,6 +6,7 @@ Uma API NestJS para gerenciar resources, categories, features e feature values.
 
 - Node.js (>= 18 recomendado)
 - npm
+- MongoDB (para produção) ou SQLite (para desenvolvimento local)
 
 ## Instalação
 
@@ -14,6 +15,49 @@ No diretório do projeto, instale as dependências:
 ```powershell
 npm install
 ```
+
+## 🗄️ Banco de Dados
+
+### MongoDB (Produção/Docker)
+
+A API está configurada para usar MongoDB em produção. Veja a documentação completa em:
+- **[MONGODB_MIGRATION.md](MONGODB_MIGRATION.md)** - Configuração do MongoDB
+
+### Popular o Banco com Dados Iniciais
+
+#### 🤖 Auto-Seed (Recomendado para Docker/Produção)
+
+O banco pode ser populado **automaticamente** quando a aplicação inicia, se estiver vazio:
+
+```env
+# No arquivo .env da raiz do projeto
+AUTO_SEED=true
+```
+
+Quando habilitado:
+- ✅ Verifica se o banco está vazio na inicialização
+- ✅ Popula automaticamente se necessário
+- ✅ Não duplica dados em reinicializações
+- ✅ Ideal para ambientes Docker/produção
+
+📚 **Documentação completa**: [AUTO_SEED.md](AUTO_SEED.md)
+
+#### 🚀 Seed Manual (Desenvolvimento)
+
+```powershell
+# Popular o banco MongoDB
+npm run seed:mongo
+
+# Popular limpando dados existentes
+npm run seed:mongo:clean
+```
+
+#### 📚 Documentação Completa
+- **[AUTO_SEED.md](AUTO_SEED.md)** - Seed automático na inicialização
+- **[SEED_DOCS_INDEX.md](SEED_DOCS_INDEX.md)** - Índice de toda a documentação de seed
+- **[SEED_QUICKSTART.md](SEED_QUICKSTART.md)** - Guia rápido em 3 passos
+- **[SEED_SCRIPTS_SUMMARY.md](SEED_SCRIPTS_SUMMARY.md)** - Visão geral completa dos scripts
+- **[src/scripts/README.md](src/scripts/README.md)** - Documentação detalhada
 
 ## Executando a aplicação
 
