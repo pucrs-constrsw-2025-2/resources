@@ -9,7 +9,6 @@ import {
   Delete,
   Query,
   ValidationPipe,
-  ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
@@ -66,7 +65,7 @@ export class CategoryController {
     type: Category,
   })
   @ApiResponse({ status: 404, description: 'Category not found.' })
-  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Category> {
+  async findOne(@Param('id') id: string): Promise<Category> {
     return await this.categoryService.findOne(id);
   }
 
@@ -80,7 +79,7 @@ export class CategoryController {
   })
   @ApiResponse({ status: 404, description: 'Category not found.' })
   async update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id') id: string,
     @Body(ValidationPipe) updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
     return await this.categoryService.update(id, updateCategoryDto);
@@ -90,7 +89,7 @@ export class CategoryController {
   @ApiOperation({ summary: 'Replace a category' })
   @ApiParam({ name: 'id', description: 'Category ID', type: 'string' })
   async replace(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id') id: string,
     @Body(ValidationPipe) updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
     return await this.categoryService.update(id, updateCategoryDto);
@@ -104,21 +103,21 @@ export class CategoryController {
     description: 'The category has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'Category not found.' })
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+  async remove(@Param('id') id: string): Promise<void> {
     return await this.categoryService.remove(id);
   }
 
   // Relationship: Resources of a Category
   @Get(':id/resources')
   @ApiOperation({ summary: 'Get resources for a category' })
-  async getResources(@Param('id', ParseUUIDPipe) id: string) {
+  async getResources(@Param('id') id: string) {
     return await this.resourceService.findByCategory(id);
   }
 
   @Post(':id/resources')
   @ApiOperation({ summary: 'Create a resource in a category' })
   async createResource(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id') id: string,
     @Body(ValidationPipe) createResourceDto: any,
   ) {
     // ensure categoryId is set to the path id
@@ -129,14 +128,14 @@ export class CategoryController {
   // Relationship: Features of a Category
   @Get(':id/features')
   @ApiOperation({ summary: 'Get features for a category' })
-  async getFeatures(@Param('id', ParseUUIDPipe) id: string) {
+  async getFeatures(@Param('id') id: string) {
     return await this.featureService.findByCategory(id);
   }
 
   @Post(':id/features')
   @ApiOperation({ summary: 'Create a feature in a category' })
   async createFeature(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id') id: string,
     @Body(ValidationPipe) createFeatureDto: any,
   ) {
     createFeatureDto.categoryId = id;
