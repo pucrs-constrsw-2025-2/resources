@@ -10,17 +10,21 @@ import {
   Delete,
   ValidationPipe,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { FeatureService } from '../services/feature.service';
 import { CreateFeatureDto } from '../dto/create-feature.dto';
 import { UpdateFeatureDto } from '../dto/update-feature.dto';
 import { Feature } from '../entities/feature.entity';
+import { AuthGuard } from '../guards/auth.guard';
 
 @ApiTags('features')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('features')
 export class FeatureController {
-  constructor(private readonly featureService: FeatureService) {}
+  constructor(private readonly featureService: FeatureService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new feature' })

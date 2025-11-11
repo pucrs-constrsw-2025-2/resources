@@ -1,0 +1,1437 @@
+{
+    "info": {
+        "_postman_id": "resources-api-2025",
+        "name": "Resources API - Complete Test Suite",
+        "description": "Collection completa para testar todos os endpoints da API Resources com autenticação OAuth/JWT",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{access_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "item": [
+        {
+            "name": "0. Setup",
+            "item": [
+                {
+                    "name": "Auth - Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = JSON.parse(pm.response.text());",
+                                    "pm.environment.set(\"access_token\", jsonData.access_token);",
+                                    "pm.environment.set(\"refresh_token\", jsonData.refresh_token);",
+                                    "",
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Access token is present\", function () {",
+                                    "    pm.expect(jsonData.access_token).to.exist;",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "username",
+                                    "value": "{{oauth_username}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "{{oauth_password}}",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{oauth_base}}/api/v1/login",
+                            "host": [
+                                "{{oauth_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "login"
+                            ]
+                        },
+                        "description": "Obter token JWT para usar nos demais endpoints"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Health Check",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Service is UP\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.status).to.eql(\"UP\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/health",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Verificar saúde da API (não requer autenticação)"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Configuração inicial e autenticação"
+        },
+        {
+            "name": "1. Categories",
+            "item": [
+                {
+                    "name": "Get All Categories",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});",
+                                    "",
+                                    "// Save first category ID for later use",
+                                    "if (pm.response.json().length > 0) {",
+                                    "    pm.environment.set(\"category_id\", pm.response.json()[0]._id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories"
+                            ]
+                        },
+                        "description": "Listar todas as categorias"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Category",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Category created successfully\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "    pm.expect(jsonData.name).to.eql(\"Categoria de Teste\");",
+                                    "});",
+                                    "",
+                                    "// Save new category ID",
+                                    "pm.environment.set(\"new_category_id\", pm.response.json()._id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Categoria de Teste\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories"
+                            ]
+                        },
+                        "description": "Criar uma nova categoria"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Category by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Category details returned\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "    pm.expect(jsonData.name).to.exist;",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories/{{category_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories",
+                                "{{category_id}}"
+                            ]
+                        },
+                        "description": "Obter detalhes de uma categoria específica"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Category (PATCH)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Category updated\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.name).to.eql(\"Categoria Atualizada\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Categoria Atualizada\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories/{{new_category_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories",
+                                "{{new_category_id}}"
+                            ]
+                        },
+                        "description": "Atualizar parcialmente uma categoria"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Category (PUT)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Categoria Substituída\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories/{{new_category_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories",
+                                "{{new_category_id}}"
+                            ]
+                        },
+                        "description": "Substituir completamente uma categoria"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Category Resources",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories/{{category_id}}/resources",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories",
+                                "{{category_id}}",
+                                "resources"
+                            ]
+                        },
+                        "description": "Listar recursos de uma categoria"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Category Features",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories/{{category_id}}/features",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories",
+                                "{{category_id}}",
+                                "features"
+                            ]
+                        },
+                        "description": "Listar features de uma categoria"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Category",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/categories/{{new_category_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "categories",
+                                "{{new_category_id}}"
+                            ]
+                        },
+                        "description": "Deletar uma categoria"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Operações CRUD para Categories"
+        },
+        {
+            "name": "2. Features",
+            "item": [
+                {
+                    "name": "Get All Features",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});",
+                                    "",
+                                    "// Save first feature ID",
+                                    "if (pm.response.json().length > 0) {",
+                                    "    pm.environment.set(\"feature_id\", pm.response.json()[0]._id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/features",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "features"
+                            ]
+                        },
+                        "description": "Listar todas as features"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Feature",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Feature created successfully\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "    pm.expect(jsonData.name).to.eql(\"Feature de Teste\");",
+                                    "});",
+                                    "",
+                                    "pm.environment.set(\"new_feature_id\", pm.response.json()._id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Feature de Teste\",\n  \"type\": \"STRING\",\n  \"categoryId\": \"{{category_id}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/features",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "features"
+                            ]
+                        },
+                        "description": "Criar uma nova feature"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Feature by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Feature details returned\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "    pm.expect(jsonData.name).to.exist;",
+                                    "    pm.expect(jsonData.type).to.exist;",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/features/{{feature_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "features",
+                                "{{feature_id}}"
+                            ]
+                        },
+                        "description": "Obter detalhes de uma feature específica"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Features by Category",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/features/category/{{category_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "features",
+                                "category",
+                                "{{category_id}}"
+                            ]
+                        },
+                        "description": "Listar features de uma categoria específica"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Feature (PATCH)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Feature Atualizada\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/features/{{new_feature_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "features",
+                                "{{new_feature_id}}"
+                            ]
+                        },
+                        "description": "Atualizar parcialmente uma feature"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Feature (PUT)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Feature Substituída\",\n  \"type\": \"NUMBER\",\n  \"categoryId\": \"{{category_id}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/features/{{new_feature_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "features",
+                                "{{new_feature_id}}"
+                            ]
+                        },
+                        "description": "Substituir completamente uma feature"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Feature",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/features/{{new_feature_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "features",
+                                "{{new_feature_id}}"
+                            ]
+                        },
+                        "description": "Deletar uma feature"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Operações CRUD para Features"
+        },
+        {
+            "name": "3. Resources",
+            "item": [
+                {
+                    "name": "Get All Resources",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});",
+                                    "",
+                                    "// Save first resource ID",
+                                    "if (pm.response.json().length > 0) {",
+                                    "    pm.environment.set(\"resource_id\", pm.response.json()[0]._id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/resources",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "resources"
+                            ]
+                        },
+                        "description": "Listar todos os resources"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Resource",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Resource created successfully\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "    pm.expect(jsonData.name).to.eql(\"Resource de Teste\");",
+                                    "});",
+                                    "",
+                                    "pm.environment.set(\"new_resource_id\", pm.response.json()._id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Resource de Teste\",\n  \"quantity\": 10,\n  \"status\": true,\n  \"categoryId\": \"{{category_id}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/resources",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "resources"
+                            ]
+                        },
+                        "description": "Criar um novo resource"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Resource by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Resource details returned\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "    pm.expect(jsonData.name).to.exist;",
+                                    "    pm.expect(jsonData.quantity).to.exist;",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/resources/{{resource_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "resources",
+                                "{{resource_id}}"
+                            ]
+                        },
+                        "description": "Obter detalhes de um resource específico"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Resources by Category",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/resources/category/{{category_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "resources",
+                                "category",
+                                "{{category_id}}"
+                            ]
+                        },
+                        "description": "Listar resources de uma categoria específica"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Resource (PATCH)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Resource Atualizado\",\n  \"quantity\": 15\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/resources/{{new_resource_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "resources",
+                                "{{new_resource_id}}"
+                            ]
+                        },
+                        "description": "Atualizar parcialmente um resource"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Resource (PUT)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Resource Substituído\",\n  \"quantity\": 20,\n  \"status\": false,\n  \"categoryId\": \"{{category_id}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/resources/{{new_resource_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "resources",
+                                "{{new_resource_id}}"
+                            ]
+                        },
+                        "description": "Substituir completamente um resource"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Resource",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/resources/{{new_resource_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "resources",
+                                "{{new_resource_id}}"
+                            ]
+                        },
+                        "description": "Deletar um resource"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Operações CRUD para Resources"
+        },
+        {
+            "name": "4. Feature Values",
+            "item": [
+                {
+                    "name": "Get All Feature Values",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});",
+                                    "",
+                                    "// Save first feature value ID",
+                                    "if (pm.response.json().length > 0) {",
+                                    "    pm.environment.set(\"feature_value_id\", pm.response.json()[0]._id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/feature-values",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "feature-values"
+                            ]
+                        },
+                        "description": "Listar todos os feature values"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Feature Value",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Feature value created successfully\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "});",
+                                    "",
+                                    "pm.environment.set(\"new_feature_value_id\", pm.response.json()._id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"resourceId\": \"{{resource_id}}\",\n  \"featureId\": \"{{feature_id}}\",\n  \"valueString\": \"Valor de Teste\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/feature-values",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "feature-values"
+                            ]
+                        },
+                        "description": "Criar um novo feature value"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Feature Value by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Feature value details returned\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData._id).to.exist;",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/feature-values/{{feature_value_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "feature-values",
+                                "{{feature_value_id}}"
+                            ]
+                        },
+                        "description": "Obter detalhes de um feature value específico"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Feature Values by Resource",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/feature-values/resource/{{resource_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "feature-values",
+                                "resource",
+                                "{{resource_id}}"
+                            ]
+                        },
+                        "description": "Listar feature values de um resource específico"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Feature Values by Feature",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/feature-values/feature/{{feature_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "feature-values",
+                                "feature",
+                                "{{feature_id}}"
+                            ]
+                        },
+                        "description": "Listar feature values de uma feature específica"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Feature Value (PATCH)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"valueString\": \"Valor Atualizado\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/feature-values/{{new_feature_value_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "feature-values",
+                                "{{new_feature_value_id}}"
+                            ]
+                        },
+                        "description": "Atualizar parcialmente um feature value"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Feature Value",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/feature-values/{{new_feature_value_id}}",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "feature-values",
+                                "{{new_feature_value_id}}"
+                            ]
+                        },
+                        "description": "Deletar um feature value"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Operações CRUD para Feature Values"
+        },
+        {
+            "name": "5. Value Types",
+            "item": [
+                {
+                    "name": "Get Value Types",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Response is an array\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Contains expected types\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.include.members(['STRING', 'NUMBER', 'BOOLEAN']);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{resources_base}}/api/v1/value-types",
+                            "host": [
+                                "{{resources_base}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "value-types"
+                            ]
+                        },
+                        "description": "Obter lista de tipos de valores disponíveis (enum)"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Consulta de tipos de valores disponíveis"
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ]
+}

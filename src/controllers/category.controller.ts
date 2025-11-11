@@ -10,23 +10,27 @@ import {
   Query,
   ValidationPipe,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { CategoryService } from '../services/category.service';
 import { ResourceService } from '../services/resource.service';
 import { FeatureService } from '../services/feature.service';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { Category } from '../entities/category.entity';
+import { AuthGuard } from '../guards/auth.guard';
 
 @ApiTags('categories')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('categories')
 export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
     private readonly resourceService: ResourceService,
     private readonly featureService: FeatureService,
-  ) {}
+  ) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new category' })

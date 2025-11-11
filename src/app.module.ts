@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HttpModule } from '@nestjs/axios';
 import { CategoryController } from './controllers/category.controller';
 import { FeatureController } from './controllers/feature.controller';
 import { ResourceController } from './controllers/resource.controller';
@@ -13,6 +14,7 @@ import { FeatureService } from './services/feature.service';
 import { ResourceService } from './services/resource.service';
 import { FeatureValueService } from './services/feature-value.service';
 import { AutoSeedService } from './services/auto-seed.service';
+import { AuthGuard } from './guards/auth.guard';
 import { Category, CategorySchema } from './entities/category.entity';
 import { Feature, FeatureSchema } from './entities/feature.entity';
 import { Resource, ResourceSchema } from './entities/resource.entity';
@@ -21,6 +23,7 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
 @Module({
   imports: [
     TerminusModule,
+    HttpModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '../../.env', // Path to root .env file
@@ -33,11 +36,11 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
         const username = configService.get<string>('RESOURCES_MONGODB_USER', 'resources');
         const password = configService.get<string>('RESOURCES_MONGODB_PASSWORD', 'a12345678');
         const database = configService.get<string>('RESOURCES_MONGODB_DB', 'resources');
-        
+
         const uri = `mongodb://${username}:${password}@${host}:${port}/${database}?authSource=${database}`;
-        
+
         console.log('MongoDB URI:', uri.replace(password, '***'));
-        
+
         return {
           uri,
         };
@@ -65,6 +68,7 @@ import { FeatureValue, FeatureValueSchema } from './entities/feature-value.entit
     ResourceService,
     FeatureValueService,
     AutoSeedService,
+    AuthGuard,
   ],
 })
-export class AppModule {}
+export class AppModule { }

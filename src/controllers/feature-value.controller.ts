@@ -8,17 +8,21 @@ import {
   Delete,
   ValidationPipe,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { FeatureValueService } from '../services/feature-value.service';
 import { CreateFeatureValueDto } from '../dto/create-feature-value.dto';
 import { UpdateFeatureValueDto } from '../dto/update-feature-value.dto';
 import { FeatureValue } from '../entities/feature-value.entity';
+import { AuthGuard } from '../guards/auth.guard';
 
 @ApiTags('feature-values')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('feature-values')
 export class FeatureValueController {
-  constructor(private readonly featureValueService: FeatureValueService) {}
+  constructor(private readonly featureValueService: FeatureValueService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new feature value' })

@@ -10,17 +10,21 @@ import {
   Delete,
   ValidationPipe,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { ResourceService } from '../services/resource.service';
 import { CreateResourceDto } from '../dto/create-resource.dto';
 import { UpdateResourceDto } from '../dto/update-resource.dto';
 import { Resource } from '../entities/resource.entity';
+import { AuthGuard } from '../guards/auth.guard';
 
 @ApiTags('resources')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('resources')
 export class ResourceController {
-  constructor(private readonly resourceService: ResourceService) {}
+  constructor(private readonly resourceService: ResourceService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new resource' })

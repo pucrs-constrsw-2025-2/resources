@@ -29,6 +29,7 @@ async function bootstrap() {
     .addTag('features', 'Features management')
     .addTag('resources', 'Resources management')
     .addTag('feature-values', 'Feature values management')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
