@@ -11,7 +11,7 @@
  *   npx ts-node -r tsconfig-paths/register src/scripts/seed-mongodb.ts
  */
 
-import { MongoClient, ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -32,14 +32,15 @@ interface SeedData {
 }
 
 async function seedMongoDB() {
-  const client = new MongoClient(MONGO_URI);
-
   try {
     console.log('🔌 Conectando ao MongoDB...');
-    await client.connect();
+    await mongoose.connect(MONGO_URI);
     console.log('✅ Conectado ao MongoDB');
 
-    const db = client.db(DB_NAME);
+    const db = mongoose.connection.db;
+    if (!db) {
+      throw new Error('Database connection not available');
+    }
 
     // Carregar dados do arquivo JSON
     const dataPath = path.join(__dirname, 'seed-data.json');
@@ -61,7 +62,7 @@ async function seedMongoDB() {
     // 1. Criar categorias
     console.log('📁 Criando categorias...');
     const categoriesCollection = db.collection('categories');
-    const categoryMap = new Map<string, ObjectId>();
+    const categoryMap = new Map<string, mongoose.Types.ObjectId>();
 
     for (const category of seedData.categories) {
       const result = await categoriesCollection.insertOne({
@@ -69,7 +70,7 @@ async function seedMongoDB() {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      categoryMap.set(category.name, result.insertedId);
+      categoryMap.set(category.name, result.insertedId as mongoose.Types.ObjectId);
       console.log(`   ✓ ${category.name}`);
     }
     console.log(`✅ ${categoryMap.size} categorias criadas`);
@@ -77,7 +78,7 @@ async function seedMongoDB() {
     // 2. Criar features
     console.log('🔧 Criando features...');
     const featuresCollection = db.collection('features');
-    const featureMap = new Map<string, { id: ObjectId; categoryId: ObjectId }>();
+    const featureMap = new Map<string, { id: mongoose.Types.ObjectId; categoryId: mongoose.Types.ObjectId }>();
 
     for (const feature of seedData.features) {
       const categoryId = categoryMap.get(feature.categoryName);
@@ -94,7 +95,7 @@ async function seedMongoDB() {
         updatedAt: new Date(),
       });
       featureMap.set(`${feature.categoryName}:${feature.name}`, {
-        id: result.insertedId,
+        id: result.insertedId as mongoose.Types.ObjectId,
         categoryId,
       });
       console.log(`   ✓ ${feature.name} (${feature.categoryName})`);
@@ -105,7 +106,7 @@ async function seedMongoDB() {
     console.log('📦 Criando resources...');
     const resourcesCollection = db.collection('resources');
     const featureValuesCollection = db.collection('feature_values');
-    
+
     let resourceCount = 0;
     let featureValueCount = 0;
 
@@ -132,7 +133,7 @@ async function seedMongoDB() {
       for (const [featureName, value] of Object.entries(resource.featureValues)) {
         const featureKey = `${resource.categoryName}:${featureName}`;
         const feature = featureMap.get(featureKey);
-        
+
         if (!feature) {
           console.warn(`     ⚠️  Feature não encontrada: ${featureName}`);
           continue;
@@ -178,7 +179,7 @@ async function seedMongoDB() {
     console.error('❌ Erro durante o seed:', error);
     process.exit(1);
   } finally {
-    await client.close();
+    await mongoose.disconnect();
     console.log('\n👋 Conexão com MongoDB fechada');
   }
 }
