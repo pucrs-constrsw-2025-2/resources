@@ -33,7 +33,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/v1/docs', app, document);
 
   // Global API prefix (exclude actuator endpoints and /health)
   app.setGlobalPrefix('api/v1', {
@@ -46,7 +46,7 @@ async function bootstrap() {
   const host = process.env.RESOURCES_INTERNAL_HOST || 'localhost';
   const protocol = process.env.RESOURCES_INTERNAL_PROTOCOL || 'http';
   console.log(`Application is running on: ${protocol}://${host}:${port}`);
-  console.log(`Swagger documentation is available at: ${protocol}://${host}:${port}/api`);
+  console.log(`Swagger documentation is available at: ${protocol}://${host}:${port}/api/v1/docs`);
 }
 
 bootstrap();
