@@ -42,6 +42,7 @@ COPY --from=builder /app/dist ./dist
 
 # Expose the port
 EXPOSE 8080
+EXPOSE 9229
 
 # Start the application
 CMD ["node", "dist/main.js"]
