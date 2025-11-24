@@ -35,9 +35,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/v1/docs', app, document);
 
-  // Global API prefix (exclude actuator endpoints and /health)
+  // Global API prefix (exclude actuator endpoints)
   app.setGlobalPrefix('api/v1', {
-    exclude: ['actuator/(.*)', 'health'],
+    exclude: ['actuator/(.*)'],
   });
 
   // Prefer service-scoped env var from root .env, fallback to PORT, then default

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsUUID, MaxLength, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsMongoId, MaxLength, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateResourceDto {
@@ -30,10 +30,10 @@ export class CreateResourceDto {
   status: boolean = true;
 
   @ApiProperty({
-    description: 'Category ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'Category ID (MongoDB ObjectId)',
+    example: '507f1f77bcf86cd799439011',
   })
-  @IsUUID()
+  @IsMongoId()
   @IsNotEmpty()
   categoryId: string;
 }
