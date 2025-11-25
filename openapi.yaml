@@ -18,6 +18,8 @@ tags:
     description: Gerenciamento de recursos
   - name: FeatureValues
     description: Gerenciamento de valores de features
+  - name: ValueTypes
+    description: Tipos de valores disponíveis
 
 paths:
   /api/v1/categories:
@@ -65,7 +67,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/v1/categories/{id}:
+  /api/v1/categories/{categoryId}:
     get:
       tags:
         - Categories
@@ -74,7 +76,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: categoryId
           in: path
           required: true
           schema:
@@ -99,7 +101,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: categoryId
           in: path
           required: true
           schema:
@@ -132,7 +134,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: categoryId
           in: path
           required: true
           schema:
@@ -165,7 +167,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: categoryId
           in: path
           required: true
           schema:
@@ -178,7 +180,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /api/v1/categories/{id}/resources:
+  /api/v1/categories/{categoryId}/resources:
     get:
       tags:
         - Categories
@@ -187,7 +189,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: categoryId
           in: path
           required: true
           schema:
@@ -214,7 +216,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: categoryId
           in: path
           required: true
           schema:
@@ -289,7 +291,35 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/v1/resources/{id}:
+  /api/v1/resources/category/{categoryId}:
+    get:
+      tags:
+        - Resources
+      summary: Buscar recursos por categoria
+      operationId: getResourcesByCategory
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de recursos da categoria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResourceResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/resources/{resourceId}:
     get:
       tags:
         - Resources
@@ -298,7 +328,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: resourceId
           in: path
           required: true
           schema:
@@ -324,7 +354,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: resourceId
           in: path
           required: true
           schema:
@@ -358,7 +388,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: resourceId
           in: path
           required: true
           schema:
@@ -392,7 +422,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: resourceId
           in: path
           required: true
           schema:
@@ -406,7 +436,555 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /health:
+  /api/v1/features:
+    post:
+      tags:
+        - Features
+      summary: Criar uma nova feature
+      operationId: createFeature
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureCreateRequest'
+      responses:
+        '201':
+          description: Feature criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    get:
+      tags:
+        - Features
+      summary: Listar todas as features
+      operationId: findAllFeatures
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: categoryId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de features
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/features/{featureId}:
+    get:
+      tags:
+        - Features
+      summary: Buscar feature por ID
+      operationId: findOneFeature
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados da feature
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags:
+        - Features
+      summary: Atualizar feature (parcial)
+      operationId: updateFeature
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureUpdateRequest'
+      responses:
+        '200':
+          description: Feature atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Features
+      summary: Substituir feature (completo)
+      operationId: replaceFeature
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureUpdateRequest'
+      responses:
+        '200':
+          description: Feature substituída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Features
+      summary: Deletar feature
+      operationId: deleteFeature
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Feature deletada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/features/category/{categoryId}:
+    get:
+      tags:
+        - Features
+      summary: Buscar features por categoria
+      operationId: getFeaturesByCategory
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de features da categoria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/feature-values:
+    post:
+      tags:
+        - FeatureValues
+      summary: Criar um novo feature value
+      operationId: createFeatureValue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureValueCreateRequest'
+      responses:
+        '201':
+          description: Feature value criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureValueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    get:
+      tags:
+        - FeatureValues
+      summary: Listar todos os feature values
+      operationId: findAllFeatureValues
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de feature values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureValueResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/feature-values/{featureValueId}:
+    get:
+      tags:
+        - FeatureValues
+      summary: Buscar feature value por ID
+      operationId: findOneFeatureValue
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureValueId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do feature value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureValueResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags:
+        - FeatureValues
+      summary: Atualizar feature value (parcial)
+      operationId: updateFeatureValue
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureValueId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureValueUpdateRequest'
+      responses:
+        '200':
+          description: Feature value atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureValueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - FeatureValues
+      summary: Deletar feature value
+      operationId: deleteFeatureValue
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureValueId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Feature value deletado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/feature-values/resource/{resourceId}:
+    get:
+      tags:
+        - FeatureValues
+      summary: Buscar feature values por recurso
+      operationId: getFeatureValuesByResource
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de feature values do recurso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureValueResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/feature-values/feature/{featureId}:
+    get:
+      tags:
+        - FeatureValues
+      summary: Buscar feature values por feature
+      operationId: getFeatureValuesByFeature
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: featureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de feature values da feature
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureValueResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/feature-values/resources/{resourceId}/features:
+    post:
+      tags:
+        - FeatureValues
+      summary: Criar feature value para um recurso
+      operationId: createFeatureValueForResource
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureValueCreateRequest'
+      responses:
+        '201':
+          description: Feature value criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureValueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    get:
+      tags:
+        - FeatureValues
+      summary: Listar feature values de um recurso
+      operationId: getFeatureValuesForResource
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de feature values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureValueResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/feature-values/resources/{resourceId}/features/{featureValueId}:
+    get:
+      tags:
+        - FeatureValues
+      summary: Buscar feature value específico
+      operationId: getFeatureValueForResource
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: featureValueId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do feature value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureValueResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags:
+        - FeatureValues
+      summary: Atualizar feature value
+      operationId: updateFeatureValueForResource
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: featureValueId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeatureValueUpdateRequest'
+      responses:
+        '200':
+          description: Feature value atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeatureValueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - FeatureValues
+      summary: Deletar feature value
+      operationId: deleteFeatureValueForResource
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: featureValueId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Feature value deletado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/value-types:
+    get:
+      tags:
+        - ValueTypes
+      summary: Listar tipos de valores disponíveis (enum)
+      operationId: getValueTypes
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de tipos de valores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/health:
     get:
       tags:
         - Health
@@ -415,6 +993,20 @@ paths:
       responses:
         '200':
           description: Serviço está funcionando
+
+  /api/v1/metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Métricas Prometheus
+      operationId: getMetrics
+      responses:
+        '200':
+          description: Métricas em formato Prometheus
+          content:
+            text/plain:
+              schema:
+                type: string
 
 components:
   securitySchemes:
@@ -502,6 +1094,73 @@ components:
           type: string
         categoryId:
           type: string
+
+    FeatureCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        categoryId:
+          type: string
+
+    FeatureUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        categoryId:
+          type: string
+
+    FeatureResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        categoryId:
+          type: string
+
+    FeatureValueCreateRequest:
+      type: object
+      properties:
+        value:
+          type: string
+        featureId:
+          type: string
+        resourceId:
+          type: string
+          format: uuid
+
+    FeatureValueUpdateRequest:
+      type: object
+      properties:
+        value:
+          type: string
+        featureId:
+          type: string
+        resourceId:
+          type: string
+          format: uuid
+
+    FeatureValueResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+        featureId:
+          type: string
+        resourceId:
+          type: string
+          format: uuid
 
     Error:
       type: object
