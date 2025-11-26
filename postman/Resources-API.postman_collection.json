@@ -931,16 +931,20 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "{{resources_base}}/api/v1/resources/category/{{category_id}}",
+                            "raw": "{{resources_base}}/api/v1/resources?categoryId={{category_id}}",
                             "host": [
                                 "{{resources_base}}"
                             ],
                             "path": [
                                 "api",
                                 "v1",
-                                "resources",
-                                "category",
-                                "{{category_id}}"
+                                "resources"
+                            ],
+                            "query": [
+                                {
+                                    "key": "categoryId",
+                                    "value": "{{category_id}}"
+                                }
                             ]
                         },
                         "description": "Listar resources de uma categoria específica"

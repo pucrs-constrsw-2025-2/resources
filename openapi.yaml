@@ -291,34 +291,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/v1/resources/category/{categoryId}:
-    get:
-      tags:
-        - Resources
-      summary: Buscar recursos por categoria
-      operationId: getResourcesByCategory
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: categoryId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Lista de recursos da categoria
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ResourceResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-
   /api/v1/resources/{resourceId}:
     get:
       tags:
@@ -599,7 +571,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /api/v1/features/category/{categoryId}:
+  /api/v1/features/categories/{categoryId}:
     get:
       tags:
         - Features

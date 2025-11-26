@@ -65,7 +65,7 @@ export class FeatureController {
     return await this.featureService.findOne(id);
   }
 
-  @Get('category/:categoryId')
+  @Get('categories/:categoryId')
   @ApiOperation({ summary: 'Get features by category id' })
   @ApiParam({ name: 'categoryId', description: 'Category ID', type: 'string' })
   @ApiResponse({

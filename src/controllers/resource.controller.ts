@@ -66,20 +66,6 @@ export class ResourceController {
     return await this.resourceService.findOne(id);
   }
 
-  @Get('category/:categoryId')
-  @ApiOperation({ summary: 'Get resources by category id' })
-  @ApiParam({ name: 'categoryId', description: 'Category ID', type: 'string' })
-  @ApiResponse({
-    status: 200,
-    description: 'Return resources for the category.',
-    type: [Resource],
-  })
-  async findByCategory(
-    @Param('categoryId') categoryId: string,
-  ): Promise<Resource[]> {
-    return await this.resourceService.findByCategory(categoryId);
-  }
-
   @Patch(':id')
   @ApiOperation({ summary: 'Update a resource' })
   @ApiParam({ name: 'id', description: 'Resource ID', type: 'string' })
